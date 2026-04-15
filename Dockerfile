@@ -10,7 +10,6 @@ COPY rollup.config.ts .
 COPY tsconfig.json .
 
 RUN npm ci
-RUN npm run build
 
 FROM node:20-alpine
 EXPOSE 8001

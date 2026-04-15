@@ -10,11 +10,10 @@ export type CreateServerOptions = {
     expressInstance?: Express;
     dynamoEndpoint?: string;
     skipDefaultCredentials?: boolean;
-    basePath?: string;
 };
 
 export function createServer(options?: CreateServerOptions): Express {
-    const { dynamoDbClient, expressInstance, dynamoEndpoint, skipDefaultCredentials, basePath = '' } = options || {};
+    const { dynamoDbClient, expressInstance, dynamoEndpoint, skipDefaultCredentials } = options || {};
     const app = expressInstance || express();
     let dynamodb = dynamoDbClient;
 
@@ -28,7 +27,7 @@ export function createServer(options?: CreateServerOptions): Express {
 
     const ddbApi = new DynamoApiController(dynamodb);
 
-    setupRoutes(app, ddbApi, basePath);
+    setupRoutes(app, ddbApi);
 
     return app;
 }

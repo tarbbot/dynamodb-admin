@@ -3,7 +3,7 @@
 <head>
   <%- include('partials/head') %>
   <%- include('partials/bootstrap-deps') %>
-  <script src='<%= basePath %>/assets/vendor/json-formatter/json-formatter.js'></script>
+  <script src='/assets/vendor/json-formatter/json-formatter.js'></script>
   <style>
     .table-container {
       margin-bottom: 1rem;
@@ -67,6 +67,31 @@
     .items-table td:first-child {
       background-color: white;
     }
+
+    /* Sortable column styles */
+    .sortable-header {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      padding-right: 20px !important;
+    }
+
+    .sortable-header:hover {
+      background-color: rgba(0, 0, 0, 0.075);
+    }
+
+    .sort-indicator {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8em;
+      opacity: 0.3;
+    }
+
+    .sort-indicator.active {
+      opacity: 1;
+    }
   </style>
   <%- include('partials/head-tail') %>
 </head>
@@ -75,7 +100,7 @@
     <%
       const breadcrumb = [
         {
-          href: basePath + '/',
+          href: '/',
           text: 'Tables',
         },
         {
@@ -89,30 +114,35 @@
 
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link active item-count" href='<%= basePath %>/tables/<%= encodeURIComponent(Table.TableName) %>'>
+        <a class="nav-link active item-count" href="/tables/<%= encodeURIComponent(Table.TableName) %>">
           Items
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href='<%= basePath %>/tables/<%= encodeURIComponent(Table.TableName) %>/get'>
+        <a class="nav-link" href="/tables/<%= encodeURIComponent(Table.TableName) %>/get">
           Get
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href='<%= basePath %>/tables/<%= encodeURIComponent(Table.TableName) %>/meta'>Meta</a>
+        <a class="nav-link" href="/tables/<%= encodeURIComponent(Table.TableName) %>/meta">Meta</a>
       </li>
       <li class="nav-item ml-auto">
-        <a href='<%= basePath %>/tables/<%= encodeURIComponent(Table.TableName) %>/add-item' class="nav-link">Create item</a>
+        <a href="/tables/<%= encodeURIComponent(Table.TableName) %>/add-item" class="nav-link">Create item</a>
       </li>
     </ul>
 
     <%- include('partials/error-container') %>
+
+    <div id="data-stats" class="alert alert-info d-none" style="margin-top: 1em;">
+      <strong>Data Size:</strong> <span id="data-size">-</span>
+      <span style="margin-left: 1em;"><strong>Items:</strong> <span id="item-count">-</span></span>
+    </div>
   </header>
 
   <main>
     <form
       autocomplete="off"
-      action='<%= basePath %>/tables/<%= encodeURIComponent(Table.TableName) %>'
+      action="/tables/<%= encodeURIComponent(Table.TableName) %>"
       method="get"
       style="padding-top: 20px;padding-bottom: 20px;"
       id="form"
@@ -205,6 +235,9 @@
       <div class="row">
         <div class="col-md-6">
           <button type="submit" class="btn btn-primary">Search</button>
+          <button type="button" class="btn btn-secondary" id="export-json" style="margin-left: 0.5em;">
+            Export JSON
+          </button>
         </div>
 
         <div class="col-md-6 pagination-container d-none">
@@ -236,8 +269,16 @@
     /* global JSONFormatter, $ */
     const JSONRender = value => new JSONFormatter.default(value).render()
 
+    // Sorting state
+    let currentData = null
+    let sortState = {
+      column: null,
+      direction: 'asc' // 'asc' or 'desc'
+    }
+
     const form = document.querySelector('#form')
-    form.addEventListener('submit', () => {
+
+    function buildFilters() {
       const filters = {}
 
       document.querySelectorAll('#filters-table tr').forEach((filterRow) => {
@@ -255,7 +296,11 @@
         }
       })
 
-      form.filters.value = JSON.stringify(filters)
+      return filters
+    }
+
+    form.addEventListener('submit', () => {
+      form.filters.value = JSON.stringify(buildFilters())
     })
 
     document.querySelector('select[name="queryableSelection"]').addEventListener('change', (event) => {
@@ -402,48 +447,165 @@
       listContainer.append(uniqueKeys.map(key => $(`<option value="${key}"></option>`)))
     }
 
-    function renderItems(data) {
-      $('#actions-row').append(data.uniqueKeys.map(key => '<th scope="col">' + key + '</th>'))
+    function detectValueType(value) {
+      if (value === null || value === undefined) {
+        return 'null'
+      }
 
-      if (data.Items.length) {
-        $('#items-container').append(data.Items.map(item => {
-          const viewUrl = '<%= basePath %>/tables/<%= encodeURIComponent(Table.TableName) %>/items/' + encodeURIComponent(Object.values(item.__key).join(','))
-          const rowEl = $('<tr><td><a href="' + viewUrl + '">View</a></td></tr>')
+      if (typeof value === 'number') {
+        // Check if it's a timestamp
+        if (Number.isInteger(value)) {
+          if (value >= 10000000000) { // milliseconds since epoch
+            return 'timestamp'
+          } else if (value >= 100000000) { // seconds since epoch
+            return 'timestamp'
+          }
+        }
+        return 'number'
+      }
 
-          for (const column of data.uniqueKeys) {
-            const columnEl = $('<td></td>')
+      if (typeof value === 'string') {
+        return 'string'
+      }
 
-            const value = item[column]
-            let wrapperEl = null
+      if (typeof value === 'boolean') {
+        return 'boolean'
+      }
 
-            if (Number.isInteger(value)) {
-              let dateValue
-              if (value >= 10000000000) {  // 11 digits - assume date format in milliseconds
-                const date = new Date(value)
-                if (!isNaN(date)) {
-                  dateValue = `${date.toISOString()} (assumed milliseconds since epoch)`
-                }
-              } else if (value >= 100000000) {  // 9 digits - assume date format in seconds
-                const date = new Date(value * 1000)
-                if (!isNaN(date)) {
-                  dateValue = `${date.toISOString()} (assumed seconds since epoch)`
-                }
+      return 'object'
+    }
+
+    function compareValues(a, b, column) {
+      const aVal = a[column]
+      const bVal = b[column]
+
+      // Handle null/undefined values - always put them at the end
+      if (aVal === null || aVal === undefined) return 1
+      if (bVal === null || bVal === undefined) return -1
+
+      const aType = detectValueType(aVal)
+      const bType = detectValueType(bVal)
+
+      // If types are different, sort by type
+      if (aType !== bType) {
+        return aType.localeCompare(bType)
+      }
+
+      // Same type, compare values
+      if (aType === 'number' || aType === 'timestamp') {
+        return aVal - bVal
+      }
+
+      if (aType === 'string') {
+        return String(aVal).localeCompare(String(bVal))
+      }
+
+      if (aType === 'boolean') {
+        return aVal === bVal ? 0 : aVal ? 1 : -1
+      }
+
+      // For objects, compare JSON stringified versions
+      return JSON.stringify(aVal).localeCompare(JSON.stringify(bVal))
+    }
+
+    function sortItems(items, column, direction) {
+      const sortedItems = [...items].sort((a, b) => {
+        const comparison = compareValues(a, b, column)
+        return direction === 'asc' ? comparison : -comparison
+      })
+      return sortedItems
+    }
+
+    function updateSortIndicators() {
+      // Remove active class from all indicators
+      $('.sort-indicator').removeClass('active')
+
+      // Add active class to current sort column
+      if (sortState.column) {
+        const headerIndex = currentData.uniqueKeys.indexOf(sortState.column) + 1 // +1 for Actions column
+        const indicator = $(`#actions-row th:eq(${headerIndex}) .sort-indicator`)
+        indicator.addClass('active')
+        indicator.text(sortState.direction === 'asc' ? '▲' : '▼')
+      }
+    }
+
+    function handleColumnSort(column) {
+      if (sortState.column === column) {
+        // Toggle direction
+        sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc'
+      } else {
+        // New column, default to ascending
+        sortState.column = column
+        sortState.direction = 'asc'
+      }
+
+      // Sort items
+      const sortedItems = sortItems(currentData.Items, sortState.column, sortState.direction)
+
+      // Clear and re-render table body
+      $('#items-container').empty()
+      renderTableRows(sortedItems, currentData.uniqueKeys)
+
+      // Update sort indicators
+      updateSortIndicators()
+    }
+
+    function renderTableRows(items, uniqueKeys) {
+      $('#items-container').append(items.map(item => {
+        const viewUrl = '/tables/<%= encodeURIComponent(Table.TableName) %>/items/' + encodeURIComponent(Object.values(item.__key).join(','))
+        const rowEl = $('<tr><td><a href="' + viewUrl + '">View</a></td></tr>')
+
+        for (const column of uniqueKeys) {
+          const columnEl = $('<td></td>')
+
+          const value = item[column]
+          let wrapperEl = null
+
+          if (Number.isInteger(value)) {
+            let dateValue
+            if (value >= 10000000000) {  // 11 digits - assume date format in milliseconds
+              const date = new Date(value)
+              if (!isNaN(date)) {
+                dateValue = `${date.toISOString()} (assumed milliseconds since epoch)`
               }
-
-              if (dateValue) {
-                wrapperEl = $('<abbr data-toggle="tooltip" data-placement="top" title="' + dateValue + '"></abbr>')
-              } else {
-                wrapperEl = $('<div class="preformatted"></div>')
+            } else if (value >= 100000000) {  // 9 digits - assume date format in seconds
+              const date = new Date(value * 1000)
+              if (!isNaN(date)) {
+                dateValue = `${date.toISOString()} (assumed seconds since epoch)`
               }
+            }
+
+            if (dateValue) {
+              wrapperEl = $('<abbr data-toggle="tooltip" data-placement="top" title="' + dateValue + '"></abbr>')
             } else {
               wrapperEl = $('<div class="preformatted"></div>')
             }
-
-            rowEl.append(columnEl.append(wrapperEl.append(JSONRender(value))))
+          } else {
+            wrapperEl = $('<div class="preformatted"></div>')
           }
 
-          return rowEl
-        }))
+          rowEl.append(columnEl.append(wrapperEl.append(JSONRender(value))))
+        }
+
+        return rowEl
+      }))
+    }
+
+    function renderItems(data) {
+      // Store data for sorting
+      currentData = data
+
+      // Render sortable column headers
+      $('#actions-row').append(data.uniqueKeys.map(key => {
+        const th = $('<th scope="col" class="sortable-header"></th>')
+        th.text(key)
+        th.append('<span class="sort-indicator">⇅</span>')
+        th.on('click', () => handleColumnSort(key))
+        return th
+      }))
+
+      if (data.Items.length) {
+        renderTableRows(data.Items, data.uniqueKeys)
 
         $('select[name="pageSize"]').on('change', (e) => {
           const search = new URLSearchParams(location.search);
@@ -476,6 +638,12 @@
       }
 
       $('#table-placeholder').addClass('d-none')
+
+      if (data.totalSizeFormatted) {
+        $('#data-size').text(data.totalSizeFormatted)
+        $('#item-count').text(data.Items.length)
+        $('#data-stats').removeClass('d-none')
+      }
 
       updateFilterAutocomplete(data.uniqueKeys)
     }
@@ -527,6 +695,18 @@
         .catch(error => {
           handleError(error.message)
         })
+    })
+
+    // Export JSON handler
+    document.querySelector('#export-json').addEventListener('click', (event) => {
+      event.preventDefault()
+
+      const url = new URL(document.location.pathname + '/export', document.location.origin)
+      url.searchParams.set('filters', form.filters.value)
+      url.searchParams.set('operationType', document.querySelector('select[name="operationType"]').value)
+      url.searchParams.set('queryableSelection', document.querySelector('select[name="queryableSelection"]').value)
+
+      window.location.href = url.toString()
     })
     </script>
 

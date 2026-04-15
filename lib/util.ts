@@ -74,7 +74,7 @@ export async function doSearch(
 
     let items: ItemList = [];
 
-    const getNextBite = async(params: ScanCommandInput | QueryCommandInput, nextKey: Key | undefined = undefined): Promise<ItemList> => {
+    const getNextBite = async (params: ScanCommandInput | QueryCommandInput, nextKey: Key | undefined = undefined): Promise<ItemList> => {
         if (nextKey) {
             params.ExclusiveStartKey = nextKey;
         }
@@ -122,4 +122,22 @@ function typecastKey(keyName: string, keyValue: string, table: TableDescription)
 
 export function isAttributeNotAlreadyCreated(attributeDefinitions: AttributeDefinition[], attributeName: string): boolean {
     return !attributeDefinitions.find(attributeDefinition => attributeDefinition.AttributeName === attributeName);
+}
+
+export function calculateItemSize(item: Record<string, any>): number {
+    return Buffer.byteLength(JSON.stringify(item), 'utf8');
+}
+
+export function formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+}
+
+export function calculateTotalSize(items: ItemList): number {
+    return items.reduce((total, item) => total + calculateItemSize(item), 0);
 }

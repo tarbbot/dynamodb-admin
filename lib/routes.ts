@@ -5,44 +5,42 @@ import errorhandler from 'errorhandler';
 import bodyParser from 'body-parser';
 import pickBy from 'lodash.pickby';
 import cookieParser from 'cookie-parser';
-import { extractKey, extractKeysForItems, isAttributeNotAlreadyCreated, parseKey, ScanParams } from './util';
+import { extractKey, extractKeysForItems, isAttributeNotAlreadyCreated, parseKey, ScanParams, calculateItemSize, calculateTotalSize, formatBytes, doSearch } from './util';
 import { getPage } from './actions/getPage';
 import { purgeTable } from './actions/purgeTable';
 import { listAllTables } from './actions/listAllTables';
+import { exportAsJSON } from './actions/exportData';
 import asyncMiddleware from './utils/asyncMiddleware';
 import type { DynamoApiController } from './dynamoDbApi';
 
 const DEFAULT_THEME = process.env.DEFAULT_THEME || 'light';
 
-export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath = ''): void {
-    const router = express.Router();
+export function setupRoutes(app: Express, ddbApi: DynamoApiController): void {
+    app.use(errorhandler());
+    app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
 
-    router.use(errorhandler());
-    router.use('/assets', express.static(path.join(__dirname, '..', 'public')));
-
-    router.use(
+    app.use(
         cookieParser(),
         (req, res, next) => {
             const { theme = DEFAULT_THEME } = req.cookies;
             res.locals = {
                 theme,
-                basePath,
             };
             next();
         },
     );
 
-    router.get('/', asyncMiddleware(async(_req, res) => {
+    app.get('/', asyncMiddleware(async (_req, res) => {
         const data = await listAllTables(ddbApi);
         res.render('tables', { data });
     }));
 
-    router.get('/api/tables', asyncMiddleware(async(_req, res) => {
+    app.get('/api/tables', asyncMiddleware(async (_req, res) => {
         const data = await listAllTables(ddbApi);
         res.send(data);
     }));
 
-    router.get('/create-table', (_req, res) => {
+    app.get('/create-table', (_req, res) => {
         res.render('create-table', {});
     });
 
@@ -61,10 +59,10 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         IndexType: 'global' | 'local';
     };
 
-    router.post(
+    app.post(
         '/create-table',
         bodyParser.json({ limit: '500kb' }),
-        asyncMiddleware(async(req, res) => {
+        asyncMiddleware(async (req, res) => {
             const { TableName, HashAttributeName, HashAttributeType, RangeAttributeName, RangeAttributeType, ReadCapacityUnits, WriteCapacityUnits } = req.body.TableDefinition as TableDefinitionInput;
             const SecondaryIndexes = req.body.SecondaryIndexes as SecondaryIndexesInput[];
 
@@ -173,7 +171,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         }),
     );
 
-    router.delete('/tables', asyncMiddleware(async(_req, res) => {
+    app.delete('/tables', asyncMiddleware(async (_req, res) => {
         const tablesList = await listAllTables(ddbApi);
         if (tablesList.length === 0) {
             res.send('There are no tables to delete');
@@ -183,7 +181,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         res.send('Tables deleted');
     }));
 
-    router.delete('/tables-purge', asyncMiddleware(async(req, res) => {
+    app.delete('/tables-purge', asyncMiddleware(async (req, res) => {
         const tablesList = await listAllTables(ddbApi);
         if (tablesList.length === 0) {
             res.send('There are no tables to purge');
@@ -193,27 +191,27 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         res.send('Tables purged');
     }));
 
-    router.delete('/tables/:TableName', asyncMiddleware(async(req, res) => {
+    app.delete('/tables/:TableName', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         await ddbApi.deleteTable({ TableName });
         res.status(204).end();
     }));
 
-    router.delete('/tables/:TableName/all', asyncMiddleware(async(req, res) => {
+    app.delete('/tables/:TableName/all', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         await purgeTable(TableName, ddbApi);
         res.status(200).end();
     }));
 
-    router.get('/tables/:TableName/get', asyncMiddleware(async(req, res) => {
+    app.get('/tables/:TableName/get', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         const hash = req.query.hash as string;
         const range = req.query.range as string;
         if (hash) {
             if (range) {
-                res.redirect(`${basePath}/tables/${encodeURIComponent(TableName)}/items/${encodeURIComponent(hash)},${encodeURIComponent(range)}`);
+                res.redirect(`/tables/${encodeURIComponent(TableName)}/items/${encodeURIComponent(hash)},${encodeURIComponent(range)}`);
             } else {
-                res.redirect(`${basePath}/tables/${encodeURIComponent(TableName)}/items/${encodeURIComponent(hash)}`);
+                res.redirect(`/tables/${encodeURIComponent(TableName)}/items/${encodeURIComponent(hash)}`);
             }
             return;
         }
@@ -228,7 +226,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         });
     }));
 
-    router.get('/tables/:TableName', asyncMiddleware(async(req, res) => {
+    app.get('/tables/:TableName', asyncMiddleware(async (req, res) => {
         const TableName = req.params.TableName;
         req.query = pickBy(req.query);
         const pageNum = typeof req.query.pageNum === 'string' ? Number.parseInt(req.query.pageNum) : 1;
@@ -255,7 +253,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         res.render('scan', data);
     }));
 
-    router.get('/tables/:TableName/items', asyncMiddleware(async(req, res) => {
+    app.get('/tables/:TableName/items', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         req.query = pickBy(req.query);
         const filters = typeof req.query.filters === 'string' ? JSON.parse(req.query.filters) : {};
@@ -335,10 +333,13 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
             ...extractKeysForItems(pageItems).filter(key => !primaryKeys.includes(key)),
         ];
 
-        // Append the item key.
+        // Append the item key and size.
         for (const item of pageItems) {
             item.__key = extractKey(item, tableDescription.KeySchema!);
+            item.__size = calculateItemSize(item);
         }
+
+        const totalSize = calculateTotalSize(pageItems);
 
         const data = {
             query: req.query,
@@ -350,12 +351,90 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
             Table: tableDescription,
             Items: pageItems,
             uniqueKeys,
+            totalSize,
+            totalSizeFormatted: formatBytes(totalSize),
         };
 
         res.json(data);
     }));
 
-    router.get('/tables/:TableName/meta', asyncMiddleware(async(req, res) => {
+    app.get('/tables/:TableName/export', asyncMiddleware(async (req, res) => {
+        const { TableName } = req.params;
+        req.query = pickBy(req.query);
+        const filters = typeof req.query.filters === 'string' ? JSON.parse(req.query.filters) : {};
+        const queryableSelection = typeof req.query.queryableSelection === 'string' ? req.query.queryableSelection : 'table';
+        const operationType: 'scan' | 'query' = req.query.operationType === 'query' ? 'query' : 'scan';
+        let indexBeingUsed = null;
+
+        const tableDescription = await ddbApi.describeTable({ TableName });
+
+        if (operationType === 'query') {
+            if (queryableSelection === 'table') {
+                indexBeingUsed = tableDescription;
+            } else if (tableDescription.GlobalSecondaryIndexes) {
+                indexBeingUsed = tableDescription.GlobalSecondaryIndexes.find(index => index.IndexName === req.query.queryableSelection);
+            }
+        }
+
+        const ExpressionAttributeNames: ScanInput['ExpressionAttributeNames'] | QueryInput['ExpressionAttributeNames'] = {};
+        const ExpressionAttributeValues: ScanInput['ExpressionAttributeValues'] | QueryInput['ExpressionAttributeValues'] = {};
+        const FilterExpressions: string[] = [];
+        const KeyConditionExpression: string[] = [];
+
+        // Create a variable to uniquely identify each expression attribute
+        let i = 0;
+
+        for (const key in filters) {
+            if (filters[key].type === 'N') {
+                filters[key].value = Number(filters[key].value);
+            }
+
+            ExpressionAttributeNames[`#key${i}`] = key;
+            ExpressionAttributeValues[`:key${i}`] = filters[key].value;
+            const matchedKeySchema = indexBeingUsed
+                ? indexBeingUsed.KeySchema!.find(keySchemaItem => keySchemaItem.AttributeName === key)
+                : undefined;
+
+            if (matchedKeySchema) {
+                // Only the Range key can support begins_with operator
+                if (matchedKeySchema.KeyType === 'RANGE' && filters[key].operator === 'begins_with') {
+                    KeyConditionExpression.push(`${filters[key].operator} ( #key${i} , :key${i})`);
+                } else {
+                    KeyConditionExpression.push(`#key${i} ${filters[key].operator} :key${i}`);
+                }
+            } else {
+                ExpressionAttributeNames[`#key${i}`] = key;
+                ExpressionAttributeValues[`:key${i}`] = filters[key].value;
+
+                if (filters[key].operator === 'begins_with') {
+                    FilterExpressions.push(`${filters[key].operator} ( #key${i} , :key${i})`);
+                } else {
+                    FilterExpressions.push(`#key${i} ${filters[key].operator} :key${i}`);
+                }
+            }
+            // Increment the unique ID variable
+            i = i + 1;
+        }
+
+        const params: ScanParams = {
+            FilterExpression: FilterExpressions.length ? FilterExpressions.join(' AND ') : undefined,
+            ExpressionAttributeNames: Object.keys(ExpressionAttributeNames).length ? ExpressionAttributeNames : undefined,
+            ExpressionAttributeValues: Object.keys(ExpressionAttributeValues).length ? ExpressionAttributeValues : undefined,
+            KeyConditionExpression: KeyConditionExpression.length ? KeyConditionExpression.join(' AND ') : undefined,
+            IndexName: queryableSelection !== 'table' ? queryableSelection : undefined,
+        };
+
+        const items = await doSearch(ddbApi, TableName, params, undefined, undefined, operationType);
+
+        const jsonData = exportAsJSON(items);
+
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Content-Disposition', `attachment; filename="${TableName}-export.json"`);
+
+        res.send(jsonData);
+    }));
+
+    app.get('/tables/:TableName/meta', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         const [tableDescription, items] = await Promise.all([
             ddbApi.describeTable({ TableName }),
@@ -368,7 +447,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         res.render('meta', data);
     }));
 
-    router.delete('/tables/:TableName/items/:key', asyncMiddleware(async(req, res) => {
+    app.delete('/tables/:TableName/items/:key', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         const tableDescription = await ddbApi.describeTable({ TableName });
         await ddbApi.deleteItem({
@@ -378,7 +457,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         res.status(204).end();
     }));
 
-    router.get('/tables/:TableName/add-item', asyncMiddleware(async(req, res) => {
+    app.get('/tables/:TableName/add-item', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         const tableDescription = await ddbApi.describeTable({ TableName });
         const Item: Record<string, string | number> = {};
@@ -400,7 +479,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         });
     }));
 
-    router.get('/tables/:TableName/items/:key', asyncMiddleware(async(req, res) => {
+    app.get('/tables/:TableName/items/:key', asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         const tableDescription = await ddbApi.describeTable({ TableName });
         const params = {
@@ -421,7 +500,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         });
     }));
 
-    router.put('/tables/:TableName/add-item', bodyParser.json({ limit: '500kb' }), asyncMiddleware(async(req, res) => {
+    app.put('/tables/:TableName/add-item', bodyParser.json({ limit: '500kb' }), asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         const tableDescription = await ddbApi.describeTable({ TableName });
         await ddbApi.putItem({ TableName, Item: req.body });
@@ -435,7 +514,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         return;
     }));
 
-    router.put('/tables/:TableName/items/:key', bodyParser.json({ limit: '500kb' }), asyncMiddleware(async(req, res) => {
+    app.put('/tables/:TableName/items/:key', bodyParser.json({ limit: '500kb' }), asyncMiddleware(async (req, res) => {
         const { TableName } = req.params;
         const tableDescription = await ddbApi.describeTable({ TableName });
         await ddbApi.putItem({ TableName, Item: req.body });
@@ -446,10 +525,8 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController, basePath 
         res.json(response.Item);
     }));
 
-    router.use(((error, _req, res, _next) => {
+    app.use(((error, _req, res, _next) => {
         console.info(error.stack);
         res.status(500).json({ message: error.message });
     }) as ErrorRequestHandler);
-
-    app.use(basePath, router);
 }
