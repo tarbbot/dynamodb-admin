@@ -1208,6 +1208,6 @@ form {
   opacity: 0.95;
 }
 
-.table-card.stagger-item {
-  opacity: 0.95;
+.table-container {
+  opacity: 0.90;
 }
