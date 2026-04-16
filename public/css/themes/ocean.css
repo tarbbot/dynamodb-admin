@@ -71,40 +71,20 @@
 }
 
 [data-theme="ocean"] body {
-  background: var(--color-bg-base);
-  background-image:
-    radial-gradient(at 50% 0%, rgba(14, 165, 233, 0.1) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
-}
-
-/* Wave animation */
-[data-theme="ocean"] body::after {
-  content: '';
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 200%;
-  height: 200px;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(14, 165, 233, 0.05) 50%,
-    rgba(14, 165, 233, 0.1) 100%
+  background: linear-gradient(135deg,
+    #0A2E4D 0%,
+    #0C3A5F 30%,
+    #0E4C71 60%,
+    #0A2E4D 100%
   );
-  animation: wave 20s linear infinite;
-  pointer-events: none;
-  z-index: 0;
+  background-attachment: fixed;
+  position: relative;
 }
 
-@keyframes wave {
-  0% {
-    transform: translateX(0) translateY(0);
-  }
-  100% {
-    transform: translateX(-50%) translateY(10px);
-  }
-}
+/* Matrix rain columns with ocean blues */
+
+
+
 
 [data-theme="ocean"] .card-glass,
 [data-theme="ocean"] .breadcrumb {

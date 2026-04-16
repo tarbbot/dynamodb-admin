@@ -103,10 +103,19 @@
    BODY BACKGROUND WITH MESH GRADIENT
    ======================================== */
 [data-theme="aurora-dark"] body {
-  background: var(--color-bg-base);
-  background-image: var(--gradient-mesh);
+  background: linear-gradient(135deg,
+    #0A0A0F 0%,
+    #1A0B2E 30%,
+    #0D1B2A 60%,
+    #0A0A0F 100%
+  );
   background-attachment: fixed;
+  position: relative;
 }
+
+/* Matrix rain columns with theme colors */
+
+
 
 /* ========================================
    SPECIAL EFFECTS FOR AURORA THEME
@@ -201,35 +210,9 @@
     0 0 20px rgba(139, 92, 246, 0.2);
 }
 
-/* Breadcrumb Aurora Enhancement */
+/* Breadcrumb - clean style without spinning animation */
 [data-theme="aurora-dark"] .breadcrumb {
   position: relative;
-  overflow: hidden;
-}
-
-[data-theme="aurora-dark"] .breadcrumb::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 30%,
-    rgba(139, 92, 246, 0.05) 50%,
-    transparent 70%
-  );
-  animation: aurora-shimmer 10s linear infinite;
-}
-
-@keyframes aurora-shimmer {
-  0% {
-    transform: translateX(-50%) translateY(-50%) rotate(0deg);
-  }
-  100% {
-    transform: translateX(-50%) translateY(-50%) rotate(360deg);
-  }
 }
 
 /* Active Tab Aurora Underline */

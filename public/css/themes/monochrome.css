@@ -71,8 +71,18 @@
 }
 
 [data-theme="monochrome"] body {
-  background: #000000;
+  background: linear-gradient(135deg,
+    #000000 0%,
+    #1A1A1A 50%,
+    #000000 100%
+  );
+  background-attachment: fixed;
+  position: relative;
 }
+
+/* Matrix rain columns in grayscale */
+
+
 
 /* Sharp, minimal aesthetic */
 [data-theme="monochrome"] .card-glass,
@@ -163,4 +173,16 @@
 [data-theme="monochrome"] .item-count {
   color: #FFFFFF !important;
   background: transparent !important;
+}
+
+/* View button - black text on white background */
+[data-theme="monochrome"] .table-card-action-view {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+}
+
+[data-theme="monochrome"] .table-card-action-view:hover {
+  background: #E5E5E5 !important;
+  color: #000000 !important;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4) !important;
 }

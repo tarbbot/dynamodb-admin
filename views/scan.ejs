@@ -210,6 +210,125 @@
       gap: var(--space-3);
     }
 
+    /* Column Selector Dropdown */
+    .column-selector-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .column-selector-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-md);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-smooth);
+    }
+
+    .column-selector-btn:hover {
+      border-color: var(--color-primary);
+      background: var(--color-bg-overlay);
+    }
+
+    .column-selector-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .column-selector-dropdown {
+      position: absolute;
+      top: calc(100% + var(--space-2));
+      right: 0;
+      min-width: 220px;
+      max-height: 400px;
+      overflow-y: auto;
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-3);
+      z-index: 1000;
+      display: none;
+    }
+
+    .column-selector-dropdown.show {
+      display: block;
+      animation: fadeInDown var(--duration-fast) var(--ease-smooth);
+    }
+
+    .column-selector-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-2) var(--space-3);
+      margin-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-border-base);
+    }
+
+    .column-selector-header h4 {
+      margin: 0;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+
+    .column-selector-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .column-selector-action {
+      font-size: var(--font-size-xs);
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+
+    .column-selector-action:hover {
+      color: var(--color-primary-dark, var(--color-primary));
+    }
+
+    .column-option {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: background var(--duration-fast) var(--ease-smooth);
+    }
+
+    .column-option:hover {
+      background: var(--color-bg-overlay);
+    }
+
+    .column-option input[type="checkbox"] {
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .column-option label {
+      margin: 0;
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      user-select: none;
+    }
+
+    /* Hidden columns */
+    .items-table th.column-hidden,
+    .items-table td.column-hidden {
+      display: none;
+    }
+
     .page-size-selector {
       display: flex;
       align-items: center;
@@ -505,11 +624,20 @@
       border: 1px solid var(--color-border-base) !important;
       border-radius: var(--radius-md) !important;
       color: var(--color-text-primary) !important;
-      padding: var(--space-3) var(--space-4) !important;
       min-height: 40px !important;
       transition: border-color var(--duration-fast) var(--ease-smooth),
                   box-shadow var(--duration-fast) var(--ease-smooth);
       will-change: border-color;
+    }
+
+    /* Padding only for text inputs, not selects */
+    #form input.form-control[type="text"] {
+      padding: var(--space-3) var(--space-4) !important;
+    }
+
+    /* Selects use default padding to avoid text overflow */
+    #form select.form-control {
+      padding: var(--space-2) var(--space-3) !important;
     }
 
     #form .form-control:focus {
@@ -914,6 +1042,31 @@
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </a>
+          </div>
+
+          <!-- Column Selector -->
+          <div class="column-selector-container">
+            <button type="button" class="column-selector-btn" id="column-selector-btn" data-tooltip="Show/Hide Columns">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span>Columns</span>
+            </button>
+            <div class="column-selector-dropdown" id="column-selector-dropdown">
+              <div class="column-selector-header">
+                <h4>Show Columns</h4>
+                <div class="column-selector-actions">
+                  <button type="button" class="column-selector-action" id="select-all-columns">All</button>
+                  <button type="button" class="column-selector-action" id="deselect-all-columns">None</button>
+                </div>
+              </div>
+              <div id="column-options-list">
+                <!-- Will be populated by JavaScript -->
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1525,6 +1678,10 @@
           th.on('click', () => handleColumnSort(key))
           return th
         }))
+
+        // Initialize column manager with available columns
+        window.columnManager.init()
+        window.columnManager.populateColumnList(data.uniqueKeys)
       }
 
       if (data.Items.length) {
@@ -1890,6 +2047,194 @@
 
     // Handle scroll events to hide tooltip immediately
     window.addEventListener('scroll', () => removeTooltip(true), true)
+
+    // ========================================
+    // COLUMN VISIBILITY MANAGER
+    // ========================================
+
+    const ColumnManager = {
+      storageKey: 'dynamodb-admin-visible-columns',
+      tableName: '<%= Table.TableName %>',
+      visibleColumns: new Set(),
+      allColumns: [],
+
+      init() {
+        this.loadPreferences()
+        this.setupEventListeners()
+      },
+
+      getStorageKey() {
+        return `${this.storageKey}-${this.tableName}`
+      },
+
+      loadPreferences() {
+        try {
+          const saved = localStorage.getItem(this.getStorageKey())
+          if (saved) {
+            this.visibleColumns = new Set(JSON.parse(saved))
+          }
+        } catch (e) {
+          console.error('Failed to load column preferences:', e)
+        }
+      },
+
+      savePreferences() {
+        try {
+          localStorage.setItem(
+            this.getStorageKey(),
+            JSON.stringify(Array.from(this.visibleColumns))
+          )
+        } catch (e) {
+          console.error('Failed to save column preferences:', e)
+        }
+      },
+
+      setupEventListeners() {
+        // Toggle dropdown
+        const btn = document.getElementById('column-selector-btn')
+        const dropdown = document.getElementById('column-selector-dropdown')
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation()
+          dropdown.classList.toggle('show')
+        })
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.column-selector-container')) {
+            dropdown.classList.remove('show')
+          }
+        })
+
+        // Select all
+        document.getElementById('select-all-columns').addEventListener('click', () => {
+          this.showAllColumns()
+        })
+
+        // Deselect all (keep Actions always visible)
+        document.getElementById('deselect-all-columns').addEventListener('click', () => {
+          this.hideAllColumns()
+        })
+      },
+
+      populateColumnList(columns) {
+        this.allColumns = columns
+        const container = document.getElementById('column-options-list')
+        container.innerHTML = ''
+
+        // If no saved preferences, show all columns by default
+        if (this.visibleColumns.size === 0) {
+          this.visibleColumns = new Set(columns)
+        }
+
+        columns.forEach((column, index) => {
+          const option = document.createElement('div')
+          option.className = 'column-option'
+
+          const checkbox = document.createElement('input')
+          checkbox.type = 'checkbox'
+          checkbox.id = `column-check-${index}`
+          checkbox.value = column
+          checkbox.checked = this.visibleColumns.has(column)
+
+          const label = document.createElement('label')
+          label.htmlFor = `column-check-${index}`
+          label.textContent = column
+
+          checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+              this.showColumn(column)
+            } else {
+              this.hideColumn(column)
+            }
+          })
+
+          option.appendChild(checkbox)
+          option.appendChild(label)
+
+          // Make entire row clickable
+          option.addEventListener('click', (e) => {
+            if (e.target !== checkbox) {
+              checkbox.checked = !checkbox.checked
+              checkbox.dispatchEvent(new Event('change'))
+            }
+          })
+
+          container.appendChild(option)
+        })
+
+        // Apply initial visibility
+        this.applyVisibility()
+      },
+
+      showColumn(column) {
+        this.visibleColumns.add(column)
+        this.applyVisibility()
+        this.savePreferences()
+      },
+
+      hideColumn(column) {
+        this.visibleColumns.delete(column)
+        this.applyVisibility()
+        this.savePreferences()
+      },
+
+      showAllColumns() {
+        this.allColumns.forEach(col => this.visibleColumns.add(col))
+        this.updateCheckboxes()
+        this.applyVisibility()
+        this.savePreferences()
+      },
+
+      hideAllColumns() {
+        this.visibleColumns.clear()
+        this.updateCheckboxes()
+        this.applyVisibility()
+        this.savePreferences()
+      },
+
+      updateCheckboxes() {
+        this.allColumns.forEach((column, index) => {
+          const checkbox = document.getElementById(`column-check-${index}`)
+          if (checkbox) {
+            checkbox.checked = this.visibleColumns.has(column)
+          }
+        })
+      },
+
+      applyVisibility() {
+        const table = document.querySelector('.items-table')
+        if (!table) return
+
+        this.allColumns.forEach((column, index) => {
+          const columnIndex = index + 1 // +1 because first column is Actions
+          const isVisible = this.visibleColumns.has(column)
+
+          // Get all th and td for this column
+          const headers = table.querySelectorAll(`thead tr th:nth-child(${columnIndex + 1})`)
+          const cells = table.querySelectorAll(`tbody tr td:nth-child(${columnIndex + 1})`)
+
+          headers.forEach(th => {
+            if (isVisible) {
+              th.classList.remove('column-hidden')
+            } else {
+              th.classList.add('column-hidden')
+            }
+          })
+
+          cells.forEach(td => {
+            if (isVisible) {
+              td.classList.remove('column-hidden')
+            } else {
+              td.classList.add('column-hidden')
+            }
+          })
+        })
+      }
+    }
+
+    // Initialize column manager when table is loaded
+    window.columnManager = ColumnManager
     </script>
 
     <div id="table-placeholder" class="text-center">Loading data...</div>
@@ -1900,7 +2245,7 @@
       <div class="scroll-indicator"></div>
       <div class="table-wrapper table-responsive">
         <table class="table items-table table-hover">
-          <thead class="thead-light">
+          <thead>
             <tr id="actions-row">
               <th scope="col">Actions</th>
             </tr>

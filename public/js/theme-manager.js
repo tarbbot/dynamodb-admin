@@ -73,6 +73,9 @@ class ThemeManager {
     // Render theme selector in breadcrumb
     this.renderThemeSelector();
 
+    // Render background effect selector
+    this.renderEffectSelector();
+
     // Setup keyboard shortcut (Cmd/Ctrl + T)
     this.setupKeyboardShortcut();
 
@@ -129,6 +132,11 @@ class ThemeManager {
     // Save to cookie
     this.saveTheme(themeId);
     this.currentTheme = themeId;
+
+    // Dispatch theme change event for Matrix rain and other effects
+    window.dispatchEvent(new CustomEvent('themechange', {
+      detail: { theme: themeId }
+    }));
 
     // Remove transition class after animation
     if (animated) {
@@ -302,6 +310,11 @@ class ThemeManager {
       e.stopPropagation();
       const isOpen = dropdown.style.display === 'block';
 
+      // Close all other dropdowns
+      document.querySelectorAll('.theme-selector-dropdown').forEach(dd => {
+        if (dd !== dropdown) dd.style.display = 'none';
+      });
+
       if (!isOpen) {
         // Position dropdown below button, aligned to the right edge
         const rect = button.getBoundingClientRect();
@@ -369,6 +382,197 @@ class ThemeManager {
         option.style.background = 'transparent';
       }
     });
+  }
+
+  /**
+   * Render background effect selector
+   */
+  renderEffectSelector() {
+    const breadcrumb = document.querySelector('.breadcrumb');
+    if (!breadcrumb) return;
+
+    // Check if backgroundEffects is loaded
+    if (!window.backgroundEffects) {
+      console.warn('[ThemeManager] Background effects not loaded yet, retrying...');
+      setTimeout(() => this.renderEffectSelector(), 100);
+      return;
+    }
+
+    // Effect definitions with icons
+    const effectDefinitions = [
+      { id: 'none', icon: '⭕', name: 'None', description: 'No animation' },
+      { id: 'matrix-rain', icon: '💻', name: 'Matrix Rain', description: 'Falling digital characters' },
+      { id: 'particles', icon: '✨', name: 'Particles', description: 'Connected floating dots' },
+      { id: 'gradient', icon: '🌈', name: 'Animated Gradient', description: 'Shifting color waves' },
+      { id: 'waves', icon: '🌊', name: 'Waves', description: 'Flowing wave animation' },
+      { id: 'shapes', icon: '🫧', name: 'Floating Shapes', description: 'Drifting bubbles' },
+      { id: 'stars', icon: '⭐', name: 'Starfield', description: '3D space stars' }
+    ];
+
+    // Create container
+    const container = document.createElement('div');
+    container.className = 'theme-selector-container';
+    container.style.cssText = `
+      position: relative;
+      display: inline-flex;
+      margin-left: var(--space-2);
+    `;
+
+    // Create button
+    const button = document.createElement('button');
+    button.className = 'theme-selector-toggle btn btn-ghost btn-sm';
+    button.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
+      </svg>
+      <span>Effects</span>
+    `;
+    button.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    `;
+
+    // Create dropdown
+    const dropdown = document.createElement('div');
+    dropdown.className = 'theme-selector-dropdown effect-selector-dropdown';
+    dropdown.style.cssText = `
+      position: fixed !important;
+      min-width: 280px;
+      max-height: 400px;
+      overflow-y: auto;
+      background: var(--color-bg-overlay);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl), 0 0 0 1px rgba(0,0,0,0.1);
+      padding: 0.5rem;
+      z-index: 999999 !important;
+      display: none;
+      animation: slideDown var(--duration-base) var(--ease-smooth);
+    `;
+
+    const currentTheme = this.currentTheme;
+    const currentEffect = window.backgroundEffects.getSavedEffect(currentTheme) || 'none';
+
+    // Render all effect options
+    effectDefinitions.forEach(effect => {
+      const option = document.createElement('div');
+      option.className = 'theme-option effect-option';
+      option.dataset.effectId = effect.id;
+      option.style.cssText = `
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-smooth);
+      `;
+
+      // Icon
+      const icon = document.createElement('span');
+      icon.textContent = effect.icon;
+      icon.style.cssText = 'font-size: 1.5rem;';
+
+      // Content
+      const content = document.createElement('div');
+      content.style.cssText = 'flex: 1;';
+      content.innerHTML = `
+        <div style="font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.25rem;">
+          ${effect.name}
+        </div>
+        <div style="font-size: 0.75rem; color: var(--color-text-tertiary);">
+          ${effect.description}
+        </div>
+      `;
+
+      // Active indicator
+      if (effect.id === currentEffect) {
+        const check = document.createElement('svg');
+        check.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M16.7 5.3l-8.5 8.5-4.2-4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        `;
+        check.style.cssText = 'color: var(--color-primary); flex-shrink: 0;';
+        option.appendChild(check);
+        option.style.background = 'var(--color-bg-elevated)';
+      }
+
+      option.appendChild(icon);
+      option.appendChild(content);
+
+      // Hover effect
+      option.addEventListener('mouseenter', () => {
+        if (effect.id !== currentEffect) {
+          option.style.background = 'var(--color-bg-elevated)';
+        }
+      });
+      option.addEventListener('mouseleave', () => {
+        if (effect.id !== currentEffect) {
+          option.style.background = 'transparent';
+        }
+      });
+
+      // Click handler
+      option.addEventListener('click', () => {
+        window.backgroundEffects.saveEffect(currentTheme, effect.id);
+        window.backgroundEffects.loadEffect(currentTheme, effect.id);
+        dropdown.style.display = 'none';
+
+        // Show toast
+        if (window.toast) {
+          window.toast.success(`Effect: ${effect.name}`);
+        }
+
+        // Re-render to update checkmarks
+        setTimeout(() => {
+          container.remove();
+          this.renderEffectSelector();
+        }, 100);
+      });
+
+      dropdown.appendChild(option);
+    });
+
+    // Toggle dropdown
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.style.display === 'block';
+
+      // Close all other dropdowns
+      document.querySelectorAll('.theme-selector-dropdown').forEach(dd => {
+        if (dd !== dropdown) dd.style.display = 'none';
+      });
+
+      if (!isOpen) {
+        const rect = button.getBoundingClientRect();
+        dropdown.style.top = `${rect.bottom + 8}px`;
+        const rightPosition = window.innerWidth - rect.right;
+        dropdown.style.right = `${rightPosition}px`;
+        dropdown.style.left = 'auto';
+        dropdown.style.display = 'block';
+      } else {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!container.contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    container.appendChild(button);
+    breadcrumb.appendChild(container);
+
+    // Add dropdown directly to body for proper stacking
+    document.body.appendChild(dropdown);
   }
 
   /**

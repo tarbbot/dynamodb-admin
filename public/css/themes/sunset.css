@@ -71,12 +71,19 @@
 }
 
 [data-theme="sunset"] body {
-  background: var(--color-bg-base);
-  background-image:
-    radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.05) 0px, transparent 50%);
+  background: linear-gradient(135deg,
+    #292524 0%,
+    #3F1E1A 30%,
+    #5C2420 60%,
+    #292524 100%
+  );
+  background-attachment: fixed;
+  position: relative;
 }
+
+/* Matrix rain columns with warm sunset colors */
+
+
 
 [data-theme="sunset"] .card-glass,
 [data-theme="sunset"] .breadcrumb {

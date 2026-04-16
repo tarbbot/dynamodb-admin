@@ -71,11 +71,19 @@
 }
 
 [data-theme="cyberpunk"] body {
-  background: var(--color-bg-base);
-  background-image:
-    repeating-linear-gradient(0deg, rgba(255, 0, 255, 0.03) 0px, transparent 1px, transparent 2px, rgba(255, 0, 255, 0.03) 3px),
-    repeating-linear-gradient(90deg, rgba(0, 255, 255, 0.03) 0px, transparent 1px, transparent 2px, rgba(0, 255, 255, 0.03) 3px);
+  background: linear-gradient(135deg,
+    #0A0A0F 0%,
+    #1A0F14 30%,
+    #0F0A14 60%,
+    #0A0A0F 100%
+  );
+  background-attachment: fixed;
+  position: relative;
 }
+
+/* Matrix rain columns with intense neon colors */
+
+
 
 /* Maximum Glow Effects */
 [data-theme="cyberpunk"] .card-glass,

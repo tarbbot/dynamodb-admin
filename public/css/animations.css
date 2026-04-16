@@ -514,3 +514,11 @@
   transform-origin: 0 0;
   transition: transform var(--duration-base) var(--ease-smooth);
 }
+
+/* ========================================
+   MATRIX DIGITAL RAIN EFFECT
+   ======================================== */
+
+/* Matrix rain is now implemented via Canvas JavaScript (matrix-rain.js)
+   for optimal performance and authentic effect.
+   No CSS animations needed. */

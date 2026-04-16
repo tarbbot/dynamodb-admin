@@ -71,11 +71,19 @@
 }
 
 [data-theme="crystal-light"] body {
-  background: var(--color-bg-base);
-  background-image:
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.05) 0px, transparent 50%);
+  background: linear-gradient(135deg,
+    #F9FAFB 0%,
+    #EEF2FF 30%,
+    #FCE7F3 60%,
+    #F0F9FF 100%
+  );
+  background-attachment: fixed;
+  position: relative;
 }
+
+/* Matrix rain columns with theme colors */
+
+
 
 /* Glassmorphism for Light Theme */
 [data-theme="crystal-light"] .card-glass,
