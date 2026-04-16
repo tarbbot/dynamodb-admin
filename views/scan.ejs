@@ -167,6 +167,267 @@
       margin-bottom: var(--space-6);
     }
 
+    /* Top Stats Bar (Chrome Style) */
+    .stats-pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-bg-overlay);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-4);
+      gap: var(--space-4);
+    }
+
+    .stats-section {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .stat-label {
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+    }
+
+    .stat-value {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary);
+    }
+
+    .pagination-section {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .page-size-selector {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .page-size-selector select {
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border-base);
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-smooth);
+    }
+
+    .page-size-selector select:hover {
+      border-color: var(--color-primary);
+    }
+
+    .page-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .page-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border-base);
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-smooth);
+      text-decoration: none;
+    }
+
+    .page-nav-btn:hover:not(.disabled) {
+      border-color: var(--color-primary);
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .page-nav-btn.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .page-info {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      font-weight: var(--font-weight-medium);
+      white-space: nowrap;
+    }
+
+    .page-info .current-page {
+      color: var(--color-primary);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* Filter Section Header */
+    .filter-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+      padding: var(--space-4);
+      background: var(--color-bg-overlay);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-lg);
+    }
+
+    .filter-header h3 {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .filter-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border-base);
+      background: var(--color-bg-elevated);
+      color: var(--color-text-primary);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-smooth);
+      white-space: nowrap;
+    }
+
+    .filter-action-btn:hover {
+      background: var(--color-bg-overlay);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-action-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .filter-action-btn.btn-primary-action {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    .filter-action-btn.btn-primary-action:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary-light);
+      color: white;
+      box-shadow: var(--shadow-glow-sm);
+    }
+
+    .filter-action-btn.btn-danger-action {
+      background: transparent;
+      border-color: var(--color-border-base);
+      color: var(--color-text-secondary);
+    }
+
+    .filter-action-btn.btn-danger-action:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--color-danger);
+      color: var(--color-danger);
+    }
+
+    /* Responsive adjustments for stats bar */
+    @media (max-width: 992px) {
+      .stats-pagination-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-3);
+      }
+
+      .stats-section {
+        justify-content: center;
+      }
+
+      .pagination-section {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .stats-section {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .pagination-section {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .page-size-selector,
+      .page-nav {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Responsive adjustments for filter header */
+    @media (max-width: 768px) {
+      .filter-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-3);
+      }
+
+      .filter-header h3 {
+        justify-content: center;
+      }
+
+      .filter-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .filter-action-btn {
+        flex: 1 1 calc(50% - var(--space-1));
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .filter-action-btn {
+        flex: 1 1 100%;
+        width: 100%;
+      }
+
+      .filter-action-btn span {
+        display: inline;
+      }
+    }
+
     #form .table {
       background: transparent;
       border-color: var(--color-border-base);
@@ -184,6 +445,12 @@
       background: var(--color-bg-base);
       border-color: var(--color-border-base);
       padding: var(--space-3);
+    }
+
+    /* Filter section cell - remove padding */
+    #form .table td[colspan="2"] {
+      padding: var(--space-4) !important;
+      background: var(--color-bg-base);
     }
 
     #form .form-control {
@@ -221,24 +488,108 @@
       height: 40px !important;
       min-height: 40px !important;
       max-height: 40px !important;
-      padding: var(--space-3) var(--space-4) !important;
+      padding: var(--space-2) var(--space-3) !important;
       background: var(--color-bg-elevated) !important;
       border: 1px solid var(--color-border-base) !important;
       border-radius: var(--radius-md) !important;
       color: var(--color-text-primary) !important;
-      font-size: var(--font-size-base) !important;
-      line-height: normal !important;
+      font-size: var(--font-size-sm) !important;
+      line-height: 1.5 !important;
       box-sizing: border-box !important;
       vertical-align: middle !important;
       transition: border-color var(--duration-fast) var(--ease-smooth),
                   box-shadow var(--duration-fast) var(--ease-smooth) !important;
+      display: inline-flex !important;
+      align-items: center !important;
     }
 
     /* Selects specific adjustments */
     select.filter-row-type,
     select.filter-row-operator {
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
+      padding-right: var(--space-6) !important;
+      appearance: none !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right var(--space-2) center !important;
+      background-size: 12px !important;
+    }
+
+    /* Align all filter table cells */
+    #filters-table td {
+      vertical-align: middle !important;
+      padding: var(--space-2) !important;
+    }
+
+    /* Ensure filters table has proper layout */
+    #filters-table {
+      table-layout: fixed !important;
+      width: 100% !important;
+      margin-top: var(--space-4) !important;
+      margin-bottom: 0 !important;
+      border-radius: var(--radius-lg) !important;
+      overflow: hidden !important;
+    }
+
+    #filters-table tbody tr {
+      display: table-row !important;
+    }
+
+    /* Remove top border from filter table to connect with header */
+    #filters-table,
+    #filters-table tbody,
+    #filters-table tbody tr:first-child {
+      border-top: none !important;
+    }
+
+    /* Search hint */
+    .search-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+      padding: var(--space-2);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-overlay);
+      border: 1px dashed var(--color-border-base);
+    }
+
+    .search-hint kbd {
+      padding: var(--space-1) var(--space-2);
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono, monospace);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-primary);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Make sure select dropdowns show full content */
+    select.filter-row-type option,
+    select.filter-row-operator option {
+      padding: var(--space-2) var(--space-3) !important;
+      background: var(--color-bg-elevated) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    /* Hover and focus states for filter inputs */
+    .filter-row-key:hover,
+    .filter-row-value:hover,
+    .filter-row-type:hover,
+    .filter-row-operator:hover {
+      border-color: var(--color-primary) !important;
+    }
+
+    .filter-row-key:focus,
+    .filter-row-value:focus,
+    .filter-row-type:focus,
+    .filter-row-operator:focus {
+      border-color: var(--color-primary) !important;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+      outline: none !important;
     }
 
     /* Filter Pills */
@@ -450,11 +801,6 @@
     </ul>
 
     <%- include('partials/error-container') %>
-
-    <div id="data-stats" class="alert alert-info d-none" style="margin-top: 1em;">
-      <strong>Data Size:</strong> <span id="data-size">-</span>
-      <span style="margin-left: 1em;"><strong>Items:</strong> <span id="item-count">-</span></span>
-    </div>
   </header>
 
   <main>
@@ -465,6 +811,65 @@
       style="padding-top: 20px;padding-bottom: 20px;"
       id="form"
     >
+      <!-- Stats & Pagination Bar (Chrome Style) -->
+      <div class="stats-pagination-bar d-none" id="stats-pagination-bar">
+        <div class="stats-section">
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            <span class="stat-label">Data Size:</span>
+            <span class="stat-value" id="data-size">-</span>
+          </div>
+          <div class="stat-item" id="scanned-stat" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <span class="stat-label">Scanned:</span>
+            <span class="stat-value" id="scanned-count">-</span>
+          </div>
+          <div class="stat-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span class="stat-label" id="item-count-label">Found:</span>
+            <span class="stat-value" id="item-count">-</span>
+          </div>
+        </div>
+
+        <div class="pagination-section">
+          <div class="page-size-selector">
+            <span style="font-size: var(--font-size-sm); color: var(--color-text-tertiary);">Show:</span>
+            <select name="pageSize" class="form-control">
+              <% for (const [i, size] of [25, 100, 250, 500, 1000, 3000, 10000].entries()) { %>
+                <option value="<%= size %>"<% if (Number.parseInt(query.pageSize) === size || (!query.pageSize && i === 0)) { %> selected<% } %>><%= size %></option>
+              <% } %>
+            </select>
+          </div>
+
+          <div class="page-nav">
+            <a href="#" class="page-nav-btn page-nav-previous disabled" title="Previous page">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </a>
+            <span class="page-info">
+              Page <span class="current-page"><%= pageNum %></span>
+            </span>
+            <a href="#" class="page-nav-btn page-nav-next disabled" title="Next page">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
       <datalist id="attributes">
         <% for (let AttributeDefinition of Table.AttributeDefinitions) { %>
           <option value="<%= AttributeDefinition.AttributeName %>" />
@@ -503,20 +908,47 @@
             </td>
           </tr>
           <tr>
-            <th>
-              Filter
-              <div style="margin-top: 1em">
-                <button id="add-filter" class="btn btn-secondary">Add Filter</button>
+            <td colspan="2" style="padding: 0; border: none;">
+              <div class="filter-header">
+                <h3>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                  </svg>
+                  Filters
+                </h3>
+                <div class="filter-actions">
+                  <button type="button" id="add-filter" class="filter-action-btn" title="Add new filter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Filter
+                  </button>
+                  <button type="button" id="clear-filters" class="filter-action-btn btn-danger-action" title="Clear all filters">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="1 4 1 10 7 10"></polyline>
+                      <polyline points="23 20 23 14 17 14"></polyline>
+                      <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                    </svg>
+                    Clear All
+                  </button>
+                  <button type="button" class="filter-action-btn" id="export-json" title="Export data as JSON">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export
+                  </button>
+                </div>
               </div>
-            </th>
-            <td>
               <table id="filters-table" class="table table-bordered">
                 <tbody>
                   <tr>
-                    <td style="width: 95px;">
+                    <td style="width: 100px;">
                       <button type="button" onclick="removeFilter(this)" class="filter-remove btn btn-danger">Remove</button>
                     </td>
-                    <td style="width: 300px">
+                    <td style="width: 280px">
                       <input
                         type="text"
                         class="form-control filter-row-key"
@@ -524,14 +956,14 @@
                         list="attributes"
                       />
                     </td>
-                    <td style="width: 125px">
+                    <td style="width: 140px">
                       <select class="form-control filter-row-type">
                         <% for (const type in attributeTypes) { %>
                           <option value="<%= type %>"><%= attributeTypes[type] %></option>
                         <% } %>
                       </select>
                     </td>
-                    <td style="width: 140px">
+                    <td style="width: 180px">
                       <select class="form-control filter-row-operator">
                         <% for (const operator in operators) { %>
                           <option value="<%= operator %>"><%= operators[operator] %></option>
@@ -544,42 +976,20 @@
                   </tr>
                 </tbody>
               </table>
+
+              <div class="search-hint">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                Press <kbd>Enter</kbd> to search with filters
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
       <input id="filters" name="filters" type="hidden" />
-
-      <div class="row">
-        <div class="col-md-6">
-          <button type="submit" class="btn btn-primary">Search</button>
-          <button type="button" class="btn btn-secondary" id="export-json" style="margin-left: 0.5em;">
-            Export JSON
-          </button>
-        </div>
-
-        <div class="col-md-6 pagination-container d-none" style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem;">
-           <select name="pageSize" class="form-control" style="width: auto; min-width: 80px;">
-             <% for (const [i, size] of [25, 100, 250, 500, 1000, 3000, 10000].entries()) { %>
-               <option value="<%= size %>"<% if (Number.parseInt(query.pageSize) === size || (!query.pageSize && i === 0)) { %> selected<% } %>><%= size %></option>
-             <% } %>
-           </select>
-
-            <nav>
-              <ul class="pagination" style="margin: 0">
-                <li class="page-item page-item-previous disabled">
-                  <a class="page-link page-link-previous" href="#">Previous Page</a>
-                </li>
-                <li class="page-item active">
-                  <span class="page-link">Page <%= pageNum %></span>
-                </li>
-                 <li class="page-item page-item-next disabled">
-                   <a class="page-link page-link-next" href="#">Next Page</a>
-                 </li>
-              </ul>
-           </nav>
-        </div>
-      </div>
     </form>
 
     <script>
@@ -642,6 +1052,30 @@
       addFilter()
     })
 
+    document.querySelector('#clear-filters').addEventListener('click', (event) => {
+      event.preventDefault()
+      clearAllFilters()
+    })
+
+    // Handle Enter key in filter inputs to submit form
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        const target = event.target
+        // Check if the target is within the filters table
+        if (target.closest('#filters-table') ||
+            target.classList.contains('filter-row-key') ||
+            target.classList.contains('filter-row-value') ||
+            target.classList.contains('filter-row-type') ||
+            target.classList.contains('filter-row-operator')) {
+          event.preventDefault()
+          // Build filters before submitting
+          form.filters.value = JSON.stringify(buildFilters())
+          // Use requestSubmit to trigger submit event
+          form.requestSubmit()
+        }
+      }
+    })
+
     function requireIndexFilters () {
       const querySelection = document.querySelector('select[name="queryableSelection"]')
       const option = querySelection.selectedOptions[0]
@@ -684,8 +1118,25 @@
       }
 
       if (!filterRow) {
-        lastRow = document.querySelector('#filters-table tr:last-child')
-        filterRow = lastRow.cloneNode(true)
+        // Check if there's an empty row we can reuse
+        const firstRow = document.querySelector('#filters-table tr:first-child')
+        if (firstRow) {
+          const keyField = firstRow.querySelector('.filter-row-key')
+          const valueField = firstRow.querySelector('.filter-row-value')
+
+          // If the first row is empty, reuse it instead of cloning
+          if (keyField && valueField && !keyField.value && !valueField.value) {
+            filterRow = firstRow
+            lastRow = null // Don't append, we're reusing existing row
+          }
+        }
+
+        // If no empty row to reuse, clone the last row
+        if (!filterRow) {
+          lastRow = document.querySelector('#filters-table tr:last-child')
+          filterRow = lastRow.cloneNode(true)
+        }
+
         filterRow.querySelector('.filter-row-value').value = values && values.value ? values.value : ''
       }
 
@@ -758,10 +1209,85 @@
       }
     }
 
+    function clearAllFilters () {
+      // Remove all filter rows except the first one
+      const filterRows = document.querySelectorAll('#filters-table tr')
+      for (let i = filterRows.length - 1; i > 0; i--) {
+        filterRows[i].remove()
+      }
+
+      // Clear the first (and now only) filter row
+      const firstRow = document.querySelector('#filters-table tr')
+      if (firstRow) {
+        firstRow.querySelector('.filter-row-key').value = ''
+        firstRow.querySelector('.filter-row-value').value = ''
+
+        // Reset to default type and operator
+        const typeField = firstRow.querySelector('.filter-row-type')
+        const operatorField = firstRow.querySelector('.filter-row-operator')
+        if (typeField) typeField.selectedIndex = 0
+        if (operatorField) operatorField.selectedIndex = 0
+
+        // Remove required/readonly attributes if any
+        firstRow.querySelector('.filter-row-key').removeAttribute('required')
+        firstRow.querySelector('.filter-row-key').removeAttribute('readonly')
+        firstRow.querySelector('.filter-row-value').removeAttribute('required')
+        firstRow.querySelector('.filter-remove').removeAttribute('hidden')
+
+        // Enable operator field
+        if (operatorField) {
+          operatorField.removeAttribute('disabled')
+          operatorField.querySelectorAll('option').forEach((option) => {
+            option.removeAttribute('disabled')
+          })
+        }
+      }
+    }
+
     function updateFilterAutocomplete(uniqueKeys) {
       const listContainer = $('#attributes')
       listContainer.empty()
       listContainer.append(uniqueKeys.map(key => $(`<option value="${key}"></option>`)))
+    }
+
+    // Load page data via AJAX without full page reload
+    function loadPage(queryString) {
+      console.log('[Scan] Loading page via AJAX:', queryString);
+
+      // Show loading state
+      window.loading.show('Loading data...')
+
+      const url = document.location.pathname + '/items' + queryString
+
+      fetch(url)
+        .then(async (response) => {
+          console.log('[Scan] Fetch response:', response.status, response.ok);
+
+          if (response.ok) {
+            return response.json()
+          }
+
+          const responseText = await response.text()
+          throw new Error(JSON.parse(responseText).message)
+        })
+        .then(json => {
+          console.log('[Scan] Received data:', json);
+
+          // Update URL without reloading page
+          const newUrl = document.location.pathname + queryString
+          window.history.pushState({ path: newUrl }, '', newUrl)
+
+          // Re-render items (not initial load, so headers won't be re-rendered)
+          renderItems(json, false)
+
+          // Hide loading
+          window.loading.hide()
+        })
+        .catch(error => {
+          console.error('[Scan] Error loading items:', error);
+          window.loading.hide()
+          window.toast.error('Failed to load data: ' + error.message)
+        })
     }
 
     function detectValueType(value) {
@@ -908,52 +1434,71 @@
       }))
     }
 
-    function renderItems(data) {
+    function renderItems(data, isInitialLoad = true) {
       console.log('[Scan] renderItems called with data:', data);
 
       // Store data for sorting
       currentData = data
 
-      // Render sortable column headers
-      console.log('[Scan] Rendering column headers for keys:', data.uniqueKeys);
-      $('#actions-row').append(data.uniqueKeys.map(key => {
-        const th = $('<th scope="col" class="sortable-header"></th>')
-        th.text(key)
-        th.append('<span class="sort-indicator">⇅</span>')
-        th.on('click', () => handleColumnSort(key))
-        return th
-      }))
+      // Render sortable column headers (only on initial load)
+      if (isInitialLoad) {
+        console.log('[Scan] Rendering column headers for keys:', data.uniqueKeys);
+        $('#actions-row').append(data.uniqueKeys.map(key => {
+          const th = $('<th scope="col" class="sortable-header"></th>')
+          th.text(key)
+          th.append('<span class="sort-indicator">⇅</span>')
+          th.on('click', () => handleColumnSort(key))
+          return th
+        }))
+      }
 
       if (data.Items.length) {
+        // Clear previous rows (for pagination updates)
+        $('#items-container').empty()
+
         renderTableRows(data.Items, data.uniqueKeys)
 
-        $('select[name="pageSize"]').on('change', (e) => {
-          const search = new URLSearchParams(location.search);
-          search.set('pageSize', e.target.value);
-          location.search = search.toString();
-        })
+        // Setup page size change handler (only on initial load)
+        if (isInitialLoad) {
+          $('select[name="pageSize"]').on('change', (e) => {
+            loadPage('?pageSize=' + e.target.value + '&filters=' + (data.filterQueryString || ''))
+          })
+        }
 
         const pageSize = $('select[name="pageSize"]').val();
 
+        // Reset navigation buttons state
+        $('.page-nav-previous').addClass('disabled').attr('href', '#')
+        $('.page-nav-next').addClass('disabled').attr('href', '#')
+
         if (data.pageNum > 1) {
-          $('.page-link-previous')
+          $('.page-nav-previous')
             .attr('href', '?startKey=' + data.prevKey + '&pageNum=' + (data.pageNum-1) + '&filters=' + data.filterQueryString + '&pageSize=' + pageSize)
-          $('.page-item-previous').removeClass('disabled')
+            .removeClass('disabled')
         }
 
         if (data.nextKey) {
-          $('.page-link-next')
+          $('.page-nav-next')
             .attr('href', '?startKey=' + data.nextKey + '&prevKey=' + data.prevKey + '&pageNum=' + (data.pageNum+1) + '&filters=' + data.filterQueryString + '&pageSize=' + pageSize)
-          $('.page-item-next').removeClass('disabled')
+            .removeClass('disabled')
         }
 
-        const rangeFrom = ((data.pageNum - 1) * 25) + 1
+        // Update page number display
+        $('.current-page').text(data.pageNum)
+
+        const rangeFrom = ((data.pageNum - 1) * parseInt(pageSize || 25)) + 1
         const rangeTo = rangeFrom + (data.Items.length - 1)
-        $('.item-count').append(' (showing ' + rangeFrom + ' - ' + rangeTo + ')')
+
+        // Clear and update item count
+        const itemCountText = ' (showing ' + rangeFrom + ' - ' + rangeTo + ')'
+        const $itemCount = $('.item-count')
+        // Remove old showing text if exists
+        const text = $itemCount.text().split(' (showing')[0]
+        $itemCount.text(text + itemCountText)
 
         console.log('[Scan] Showing table container');
         $('.table-container').removeClass('d-none')
-        $('.pagination-container').removeClass('d-none')
+        $('#stats-pagination-bar').removeClass('d-none')
         console.log('[Scan] Table container classes after remove:', $('.table-container').attr('class'));
       } else {
         $('.no-results').removeClass('d-none')
@@ -961,10 +1506,56 @@
 
       $('#table-placeholder').addClass('d-none')
 
+      // Update stats with more useful information
+      console.log('[Scan] Full data object:', data)
+
       if (data.totalSizeFormatted) {
         $('#data-size').text(data.totalSizeFormatted)
-        $('#item-count').text(data.Items.length)
-        $('#data-stats').removeClass('d-none')
+      }
+
+      // Hide scanned stat by default
+      $('#scanned-stat').hide()
+
+      // Check if filters are active
+      const hasFilters = data.filterQueryString && data.filterQueryString !== '' && data.filterQueryString !== '%7B%7D'
+
+      // Determine what to show based on available data and context
+      if (hasFilters) {
+        // Filters are active - show total count if available
+        if (data.totalCount !== undefined) {
+          $('#item-count-label').text('Found:')
+          $('#item-count').text(data.totalCount.toLocaleString())
+        } else if (data.nextKey) {
+          // Fallback: there are more pages, so show "Found: X+" to indicate there's more
+          $('#item-count-label').text('Found:')
+          $('#item-count').text(data.Items.length.toLocaleString() + '+')
+        } else if (data.pageNum > 1) {
+          // Not first page and no next page - show page count
+          $('#item-count-label').text('Page:')
+          $('#item-count').text(data.Items.length.toLocaleString())
+        } else {
+          // First page, no next page - this is the total
+          $('#item-count-label').text('Found:')
+          $('#item-count').text(data.Items.length.toLocaleString())
+        }
+      } else {
+        // No filters - show "Total" or "Page" depending on pagination
+        if (data.totalCount !== undefined) {
+          // Show total count if available
+          if (data.pageNum > 1) {
+            $('#item-count-label').text('Page:')
+            $('#item-count').text(data.Items.length.toLocaleString())
+          } else {
+            $('#item-count-label').text('Total:')
+            $('#item-count').text(data.totalCount.toLocaleString())
+          }
+        } else if (data.nextKey || data.pageNum > 1) {
+          $('#item-count-label').text('Page:')
+          $('#item-count').text(data.Items.length.toLocaleString())
+        } else {
+          $('#item-count-label').text('Total:')
+          $('#item-count').text(data.Items.length.toLocaleString())
+        }
       }
 
       updateFilterAutocomplete(data.uniqueKeys)
@@ -980,8 +1571,24 @@
           queryFilters = JSON.parse(decodeURIComponent(queryStringFilters))
         } catch (ex) {}
 
+        const filterKeys = Object.keys(queryFilters)
         const operationType = document.querySelector('select[name="operationType"]').value
-        for (const filterKey of Object.keys(queryFilters)) {
+
+        // Clear the default empty row values (but keep the row for cloning)
+        const firstRow = document.querySelector('#filters-table tr')
+        if (firstRow && filterKeys.length > 0) {
+          const keyField = firstRow.querySelector('.filter-row-key')
+          const valueField = firstRow.querySelector('.filter-row-value')
+
+          if (keyField && valueField) {
+            // Clear the first row values (it will be filled by the first filter)
+            keyField.value = ''
+            valueField.value = ''
+          }
+        }
+
+        // Add filters - the first one will use the existing empty row
+        for (const filterKey of filterKeys) {
           const filterParams = queryFilters[filterKey]
           if (operationType === 'query') {
             const querySelection = document.querySelector('select[name="queryableSelection"]')
@@ -1038,6 +1645,27 @@
       url.searchParams.set('queryableSelection', document.querySelector('select[name="queryableSelection"]').value)
 
       window.location.href = url.toString()
+    })
+
+    // AJAX pagination - intercept navigation clicks
+    document.addEventListener('click', (event) => {
+      const target = event.target.closest('.page-nav-btn')
+
+      if (target && !target.classList.contains('disabled')) {
+        event.preventDefault()
+
+        const href = target.getAttribute('href')
+        if (href && href !== '#') {
+          loadPage(href)
+        }
+      }
+    })
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', (event) => {
+      console.log('[Scan] Popstate event, reloading page data');
+      // Reload the page data when user uses browser back/forward
+      location.reload()
     })
     </script>
 

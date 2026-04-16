@@ -324,7 +324,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController): void {
         const pageSize = typeof req.query.pageSize === 'string' ? Number.parseInt(req.query.pageSize) : 25;
 
         const results = await getPage(ddbApi, tableDescription.KeySchema!, TableName, params, pageSize, operationType);
-        const { pageItems, nextKey } = results;
+        const { pageItems, nextKey, totalCount } = results;
 
         const primaryKeys = tableDescription.KeySchema!.map(schema => schema.AttributeName);
         // Primary keys are listed first.
@@ -353,6 +353,7 @@ export function setupRoutes(app: Express, ddbApi: DynamoApiController): void {
             uniqueKeys,
             totalSize,
             totalSizeFormatted: formatBytes(totalSize),
+            totalCount,
         };
 
         res.json(data);

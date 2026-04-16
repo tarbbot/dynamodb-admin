@@ -9,7 +9,7 @@ export async function getPage(
     scanParams: ScanParams,
     pageSize: number,
     operationType: 'query' | 'scan',
-): Promise<{ pageItems: Record<string, any>[]; nextKey: any }> {
+): Promise<{ pageItems: Record<string, any>[]; nextKey: any; totalCount: number }> {
     const allFilteredItems = await doSearch(ddbApi, TableName, scanParams, undefined, undefined, operationType);
 
     const pageItems = allFilteredItems.slice(0, pageSize);
@@ -22,6 +22,7 @@ export async function getPage(
     return {
         pageItems,
         nextKey,
+        totalCount: allFilteredItems.length,
     };
 }
 
