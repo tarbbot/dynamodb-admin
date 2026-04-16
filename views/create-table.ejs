@@ -1,9 +1,249 @@
 <!DOCTYPE html>
-<html lang='en' data-theme="<%= theme %>">
+<html lang='en'>
 
 <head>
     <%- include('partials/head') %>
     <%- include('partials/bootstrap-deps') %>
+
+    <style>
+        /* ========================================
+           MODERN CREATE TABLE STYLES
+           ======================================== */
+
+        body {
+            background: var(--color-bg-base);
+            padding-bottom: var(--space-12);
+        }
+
+        main {
+            animation: fadeInUp var(--duration-slow) var(--ease-smooth);
+        }
+
+        h1 {
+            color: var(--color-text-primary);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 2px solid var(--color-border-strong);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h4 {
+            color: var(--color-text-primary);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-4);
+        }
+
+        /* Form Container */
+        #form {
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border-base);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-top: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-2);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            min-height: 40px !important;
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-base);
+            background: var(--color-bg-base) !important;
+            border: 1px solid var(--color-border-base) !important;
+            border-radius: var(--radius-lg) !important;
+            color: var(--color-text-primary) !important;
+            transition: all var(--duration-fast) var(--ease-smooth);
+            box-sizing: border-box;
+        }
+
+        /* Selects precisam de altura fixa */
+        select.form-control {
+            height: 48px !important;
+            min-height: 48px !important;
+            line-height: 48px !important;
+            padding: 0 var(--space-4) !important;
+            vertical-align: middle;
+            appearance: auto;
+            -webkit-appearance: menulist;
+            -moz-appearance: menulist;
+        }
+
+        /* Input text e number */
+        input[type="text"].form-control,
+        input[type="number"].form-control {
+            height: 48px !important;
+            min-height: 48px !important;
+            line-height: normal;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary) !important;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+            background: var(--color-bg-elevated) !important;
+        }
+
+        .form-control:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--color-bg-base) !important;
+        }
+
+        .form-control option {
+            background: var(--color-bg-overlay);
+            color: var(--color-text-primary);
+        }
+
+        /* Secondary Index Cards */
+        .secondary-indexes > div {
+            animation: fadeInUp var(--duration-base) var(--ease-smooth);
+        }
+
+        .secondary-indexes .row {
+            background: var(--color-bg-overlay);
+            border: 1px solid var(--color-border-base);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .secondary-indexes .row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-secondary);
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: var(--radius-lg) !important;
+            font-weight: var(--font-weight-medium) !important;
+            padding: var(--space-3) var(--space-6) !important;
+            transition: all var(--duration-fast) var(--ease-smooth) !important;
+            border: none !important;
+        }
+
+        .btn-primary {
+            background: var(--color-primary) !important;
+            color: white !important;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-light) !important;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow-md);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary) !important;
+            color: white !important;
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-light) !important;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--color-danger) !important;
+            color: white !important;
+        }
+
+        .btn-danger:hover {
+            background: var(--color-danger-light) !important;
+        }
+
+        .btn-lg {
+            padding: var(--space-4) var(--space-8) !important;
+            font-size: var(--font-size-lg) !important;
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--color-border-base);
+            margin: var(--space-6) 0;
+        }
+
+        /* Section Headers */
+        .secondary-indexes h4 {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .secondary-indexes h4::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+        }
+
+        /* Row Spacing */
+        .row {
+            margin-bottom: var(--space-4);
+        }
+
+        /* Submit Button Container */
+        .form-group.text-center {
+            margin-top: var(--space-8);
+            padding-top: var(--space-6);
+            border-top: 2px solid var(--color-border-base);
+        }
+
+        /* Add Index Button */
+        #new-index {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #form {
+                padding: var(--space-4);
+            }
+
+            h1 {
+                font-size: var(--font-size-2xl);
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .secondary-indexes .row {
+                padding: var(--space-4);
+            }
+        }
+    </style>
 
     <script>
         let secondaryIndexCount = 1
@@ -20,51 +260,69 @@
                 event.preventDefault()
 
                 const formValues = $('form').serializeArray()
-                const secondaryIndexes = []
-                for (let i = 0; i < secondaryIndexCount; i++) {
-                    if (!formValues.find(formInput => formInput.name === `secondary-index-${i}-IndexName`)) {
-                        continue
-                    }
-                    const index = {
-                        IndexName: findFormInputValue(formValues, `secondary-index-${i}-IndexName`),
-                        IndexType: findFormInputValue(formValues, `secondary-index-${i}-IndexType`),
-                        HashAttributeName: findFormInputValue(formValues, `secondary-index-${i}-HashAttributeName`),
-                        HashAttributeType: findFormInputValue(formValues, `secondary-index-${i}-HashAttributeType`),
-                        RangeAttributeName: findFormInputValue(formValues, `secondary-index-${i}-RangeAttributeName`),
-                        RangeAttributeType: findFormInputValue(formValues, `secondary-index-${i}-RangeAttributeType`)
+                const tableName = findFormInputValue(formValues, 'TableName')
+
+                // Show loading overlay
+                window.loading.show(`Creating table "${tableName}"...`)
+
+                try {
+                    const secondaryIndexes = []
+                    for (let i = 0; i < secondaryIndexCount; i++) {
+                        if (!formValues.find(formInput => formInput.name === `secondary-index-${i}-IndexName`)) {
+                            continue
+                        }
+                        const index = {
+                            IndexName: findFormInputValue(formValues, `secondary-index-${i}-IndexName`),
+                            IndexType: findFormInputValue(formValues, `secondary-index-${i}-IndexType`),
+                            HashAttributeName: findFormInputValue(formValues, `secondary-index-${i}-HashAttributeName`),
+                            HashAttributeType: findFormInputValue(formValues, `secondary-index-${i}-HashAttributeType`),
+                            RangeAttributeName: findFormInputValue(formValues, `secondary-index-${i}-RangeAttributeName`),
+                            RangeAttributeType: findFormInputValue(formValues, `secondary-index-${i}-RangeAttributeType`)
+                        }
+
+                        if (index.IndexType !== 'local') {
+                            index.ReadCapacityUnits = findFormInputValue(formValues, `secondary-index-${i}-ReadCapacityUnits`)
+                            index.WriteCapacityUnits = findFormInputValue(formValues, `secondary-index-${i}-WriteCapacityUnits`)
+                        }
+
+                        secondaryIndexes.push(index)
                     }
 
-                    if (index.IndexType !== 'local') {
-                        index.ReadCapacityUnits = findFormInputValue(formValues, `secondary-index-${i}-ReadCapacityUnits`)
-                        index.WriteCapacityUnits = findFormInputValue(formValues, `secondary-index-${i}-WriteCapacityUnits`)
+                    const createTableRequest = {
+                        TableDefinition: {
+                            TableName: tableName,
+                            HashAttributeName: findFormInputValue(formValues, 'HashAttributeName'),
+                            HashAttributeType: findFormInputValue(formValues, 'HashAttributeType'),
+                            RangeAttributeName: findFormInputValue(formValues, 'RangeAttributeName'),
+                            RangeAttributeType: findFormInputValue(formValues, 'RangeAttributeType'),
+                            ReadCapacityUnits: findFormInputValue(formValues, 'ReadCapacityUnits'),
+                            WriteCapacityUnits: findFormInputValue(formValues, 'WriteCapacityUnits'),
+                        },
+                        SecondaryIndexes: secondaryIndexes
                     }
 
-                    secondaryIndexes.push(index)
-                }
-                const createTableRequest = {
-                    TableDefinition: {
-                        TableName: findFormInputValue(formValues, 'TableName'),
-                        HashAttributeName: findFormInputValue(formValues, 'HashAttributeName'),
-                        HashAttributeType: findFormInputValue(formValues, 'HashAttributeType'),
-                        RangeAttributeName: findFormInputValue(formValues, 'RangeAttributeName'),
-                        RangeAttributeType: findFormInputValue(formValues, 'RangeAttributeType'),
-                        ReadCapacityUnits: findFormInputValue(formValues, 'ReadCapacityUnits'),
-                        WriteCapacityUnits: findFormInputValue(formValues, 'WriteCapacityUnits'),
-                    },
-                    SecondaryIndexes: secondaryIndexes
-                }
-                const response = await fetch(document.location.pathname, {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(createTableRequest)
-                })
-                if (response.ok) {
-                    window.location = '/'
-                } else {
-                    const error = await response.text()
-                    handleError(JSON.parse(error).message)
+                    const response = await fetch(document.location.pathname, {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(createTableRequest)
+                    })
+
+                    if (response.ok) {
+                        window.loading.hide()
+                        window.toast.success(`Table "${tableName}" created successfully!`)
+                        setTimeout(() => {
+                            window.location = '/'
+                        }, 1000)
+                    } else {
+                        const error = await response.text()
+                        window.loading.hide()
+                        handleError(JSON.parse(error).message)
+                    }
+                } catch (error) {
+                    window.loading.hide()
+                    handleError(error.message)
                 }
             })
 
@@ -132,14 +390,14 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="ReadCapacityUnits">ReadCapacityUnits</label>
+                                <label for="ReadCapacityUnits">Read Capacity Units</label>
                                 <input required type="number" id="secondary-index-${index}-ReadCapacityUnits" name="secondary-index-${index}-ReadCapacityUnits" class="form-control"
                                     value="3" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="WriteCapacityUnits">WriteCapacityUnits</label>
+                                <label for="WriteCapacityUnits">Write Capacity Units</label>
                                 <input required type="number" id="secondary-index-${index}-WriteCapacityUnits" name="secondary-index-${index}-WriteCapacityUnits" class="form-control"
                                     value="3" />
                             </div>
@@ -236,14 +494,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="ReadCapacityUnits">ReadCapacityUnits</label>
+                            <label for="ReadCapacityUnits">Read Capacity Units</label>
                             <input required type="number" id="ReadCapacityUnits" name="ReadCapacityUnits" class="form-control"
                                 value="3" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="WriteCapacityUnits">WriteCapacityUnits</label>
+                            <label for="WriteCapacityUnits">Write Capacity Units</label>
                             <input required type="number" id="WriteCapacityUnits" name="WriteCapacityUnits" class="form-control"
                                 value="3" />
                         </div>

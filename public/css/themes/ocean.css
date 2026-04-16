@@ -1,0 +1,133 @@
+/**
+ * Theme: Ocean Deep
+ * Description: Calming blues with ocean depth gradient
+ */
+
+[data-theme="ocean"] {
+  /* BASE COLORS */
+  --color-primary: #0EA5E9;
+  --color-primary-light: #38BDF8;
+  --color-primary-dark: #0284C7;
+
+  --color-secondary: #14B8A6;
+  --color-secondary-light: #2DD4BF;
+  --color-secondary-dark: #0D9488;
+
+  --color-accent: #06B6D4;
+  --color-accent-light: #22D3EE;
+  --color-accent-dark: #0891B2;
+
+  /* SEMANTIC COLORS */
+  --color-success: #10B981;
+  --color-success-light: #34D399;
+  --color-success-dark: #059669;
+
+  --color-warning: #F59E0B;
+  --color-warning-light: #FBBF24;
+  --color-warning-dark: #D97706;
+
+  --color-danger: #EF4444;
+  --color-danger-light: #F87171;
+  --color-danger-dark: #DC2626;
+
+  --color-info: #3B82F6;
+  --color-info-light: #60A5FA;
+  --color-info-dark: #2563EB;
+
+  /* BACKGROUND LAYERS */
+  --color-bg-base: #001E3C;
+  --color-bg-elevated: #0A2E4D;
+  --color-bg-overlay: #103E5E;
+  --color-bg-modal: #164E6F;
+
+  --color-bg-elevated-rgb: 10, 46, 77;
+  --color-bg-overlay-rgb: 16, 62, 94;
+
+  /* TEXT COLORS */
+  --color-text-primary: #E0F2FE;
+  --color-text-secondary: #BAE6FD;
+  --color-text-tertiary: #7DD3FC;
+  --color-text-disabled: #0369A1;
+
+  /* BORDERS */
+  --color-border-base: #0C4A6E;
+  --color-border-strong: #075985;
+  --color-border-light: #082F49;
+
+  /* GRADIENTS */
+  --gradient-bg: linear-gradient(135deg, #001E3C 0%, #0A2E4D 50%, #164E6F 100%);
+  --gradient-primary: linear-gradient(135deg, #0EA5E9 0%, #06B6D4 100%);
+  --gradient-secondary: linear-gradient(135deg, #14B8A6 0%, #3B82F6 100%);
+  --gradient-aurora: linear-gradient(135deg, #0EA5E9 0%, #14B8A6 50%, #06B6D4 100%);
+
+  /* SHADOWS & GLOWS */
+  --shadow-glow-primary: 0 0 20px rgba(14, 165, 233, 0.3);
+  --shadow-glow-secondary: 0 0 20px rgba(20, 184, 166, 0.3);
+  --shadow-glow-accent: 0 0 20px rgba(6, 182, 212, 0.3);
+
+  --shadow-glow-sm: 0 0 10px rgba(14, 165, 233, 0.2);
+  --shadow-glow-md: 0 0 20px rgba(14, 165, 233, 0.3);
+  --shadow-glow-lg: 0 0 30px rgba(14, 165, 233, 0.4);
+}
+
+[data-theme="ocean"] body {
+  background: var(--color-bg-base);
+  background-image:
+    radial-gradient(at 50% 0%, rgba(14, 165, 233, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+}
+
+/* Wave animation */
+[data-theme="ocean"] body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 200px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(14, 165, 233, 0.05) 50%,
+    rgba(14, 165, 233, 0.1) 100%
+  );
+  animation: wave 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  100% {
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+[data-theme="ocean"] .card-glass,
+[data-theme="ocean"] .breadcrumb {
+  background: rgba(10, 46, 77, 0.7);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(14, 165, 233, 0.1);
+}
+
+[data-theme="ocean"] .btn-primary {
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+}
+
+[data-theme="ocean"] .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+}
+
+[data-theme="ocean"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0EA5E9 0%, #14B8A6 100%);
+}
+
+[data-theme="ocean"] ::selection {
+  background: var(--color-primary);
+  color: white;
+}

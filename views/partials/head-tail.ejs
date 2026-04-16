@@ -1,3 +1,17 @@
-<% if(theme === "dark"){  %>
-<link rel='stylesheet' href='/assets/css/dark-theme.css'>
-<% } %>
+<script>
+  // Set theme attribute immediately to prevent flash
+  (function() {
+    const cookies = document.cookie.split(';');
+    let theme = 'aurora-dark'; // Default theme
+
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'theme') {
+        theme = value;
+        break;
+      }
+    }
+
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>

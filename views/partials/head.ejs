@@ -2,18 +2,23 @@
 <title>DynamoDB Admin</title>
 <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
 <meta http-equiv='x-ua-compatible' content='ie=edge'>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Bootstrap (base structure) -->
 <link rel='stylesheet' href='/assets/css/bootstrap.min.css'>
 
+<!-- Modern Design System -->
+<link rel='stylesheet' href='/assets/css/design-system.css'>
+<link rel='stylesheet' href='/assets/css/base.css'>
+<link rel='stylesheet' href='/assets/css/animations.css'>
+<link rel='stylesheet' href='/assets/css/components.css'>
+
 <style>
-html, body {
-  height: 100%;
-}
-
-body {
-  padding-bottom: 20px;
-  padding-top: 20px;
-}
-
+/* Legacy compatibility styles */
 a pre {
   color: inherit;
 }
@@ -22,8 +27,19 @@ a pre {
   white-space: pre;
 }
 
-/* go away, LastPass */
+/* LastPass fix */
 form[autocomplete="off"] input[type="text"] {
   background-position: 150% 50% !important;
+}
+
+/* Override Bootstrap padding */
+body {
+  padding-bottom: var(--space-8);
+  padding-top: var(--space-8);
+}
+
+/* Container adjustments */
+.container {
+  max-width: var(--container-xl);
 }
 </style>

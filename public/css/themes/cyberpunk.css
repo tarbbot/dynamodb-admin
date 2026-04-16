@@ -1,0 +1,125 @@
+/**
+ * Theme: Cyberpunk Neon
+ * Description: High-contrast neon magenta/cyan on black
+ */
+
+[data-theme="cyberpunk"] {
+  /* BASE COLORS */
+  --color-primary: #FF00FF;
+  --color-primary-light: #FF66FF;
+  --color-primary-dark: #CC00CC;
+
+  --color-secondary: #00FFFF;
+  --color-secondary-light: #66FFFF;
+  --color-secondary-dark: #00CCCC;
+
+  --color-accent: #FFFF00;
+  --color-accent-light: #FFFF66;
+  --color-accent-dark: #CCCC00;
+
+  /* SEMANTIC COLORS */
+  --color-success: #00FF41;
+  --color-success-light: #66FF77;
+  --color-success-dark: #00CC34;
+
+  --color-warning: #FFAA00;
+  --color-warning-light: #FFCC66;
+  --color-warning-dark: #CC8800;
+
+  --color-danger: #FF0055;
+  --color-danger-light: #FF6688;
+  --color-danger-dark: #CC0044;
+
+  --color-info: #00AAFF;
+  --color-info-light: #66CCFF;
+  --color-info-dark: #0088CC;
+
+  /* BACKGROUND LAYERS */
+  --color-bg-base: #0D0208;
+  --color-bg-elevated: #1A0F14;
+  --color-bg-overlay: #2A1520;
+  --color-bg-modal: #3A1F2E;
+
+  --color-bg-elevated-rgb: 26, 15, 20;
+  --color-bg-overlay-rgb: 42, 21, 32;
+
+  /* TEXT COLORS */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #FF00FF;
+  --color-text-tertiary: #00FFFF;
+  --color-text-disabled: #666666;
+
+  /* BORDERS */
+  --color-border-base: #FF00FF;
+  --color-border-strong: #00FFFF;
+  --color-border-light: #440033;
+
+  /* GRADIENTS */
+  --gradient-bg: linear-gradient(135deg, #0D0208 0%, #1A0F14 100%);
+  --gradient-primary: linear-gradient(135deg, #FF00FF 0%, #FF00AA 100%);
+  --gradient-secondary: linear-gradient(135deg, #00FFFF 0%, #00AAFF 100%);
+  --gradient-aurora: linear-gradient(135deg, #FF00FF 0%, #00FFFF 50%, #FFFF00 100%);
+
+  /* SHADOWS & GLOWS - INTENSE */
+  --shadow-glow-primary: 0 0 30px rgba(255, 0, 255, 0.7);
+  --shadow-glow-secondary: 0 0 30px rgba(0, 255, 255, 0.7);
+  --shadow-glow-accent: 0 0 30px rgba(255, 255, 0, 0.7);
+
+  --shadow-glow-sm: 0 0 15px rgba(255, 0, 255, 0.5);
+  --shadow-glow-md: 0 0 30px rgba(255, 0, 255, 0.7);
+  --shadow-glow-lg: 0 0 50px rgba(255, 0, 255, 0.9);
+}
+
+[data-theme="cyberpunk"] body {
+  background: var(--color-bg-base);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 0, 255, 0.03) 0px, transparent 1px, transparent 2px, rgba(255, 0, 255, 0.03) 3px),
+    repeating-linear-gradient(90deg, rgba(0, 255, 255, 0.03) 0px, transparent 1px, transparent 2px, rgba(0, 255, 255, 0.03) 3px);
+}
+
+/* Maximum Glow Effects */
+[data-theme="cyberpunk"] .card-glass,
+[data-theme="cyberpunk"] .breadcrumb {
+  background: rgba(26, 15, 20, 0.5);
+  border: 2px solid rgba(255, 0, 255, 0.5);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(255, 0, 255, 0.3),
+    inset 0 0 20px rgba(255, 0, 255, 0.1);
+}
+
+[data-theme="cyberpunk"] .btn-primary {
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+  border: 1px solid #FF00FF;
+}
+
+[data-theme="cyberpunk"] .btn-primary:hover {
+  box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+}
+
+[data-theme="cyberpunk"] .badge-primary {
+  background: rgba(255, 0, 255, 0.2);
+  border-color: #FF00FF;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+  text-shadow: 0 0 5px rgba(255, 0, 255, 0.8);
+}
+
+[data-theme="cyberpunk"] .table tbody tr:hover {
+  background: rgba(255, 0, 255, 0.1);
+  box-shadow:
+    inset 3px 0 0 #FF00FF,
+    0 0 20px rgba(255, 0, 255, 0.3);
+}
+
+[data-theme="cyberpunk"] h1,
+[data-theme="cyberpunk"] h2,
+[data-theme="cyberpunk"] h3 {
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+[data-theme="cyberpunk"] ::selection {
+  background: #FF00FF;
+  color: #000000;
+  text-shadow: 0 0 5px rgba(255, 0, 255, 0.8);
+}

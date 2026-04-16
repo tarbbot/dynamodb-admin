@@ -1,0 +1,317 @@
+/**
+ * Base Styles - Reset, Global Styles, Typography
+ * Applied to all themes
+ */
+
+/* ========================================
+   MODERN CSS RESET
+   ======================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  background: var(--color-bg-base);
+  transition: background-color var(--duration-slower) var(--ease-smooth),
+              color var(--duration-slower) var(--ease-smooth);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Remove default list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* Remove default button styles */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Remove default link styles */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Image defaults */
+img, picture, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Form elements */
+input, textarea, select, button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Table defaults */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ========================================
+   SCROLLBAR CUSTOMIZATION
+   ======================================== */
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-base) var(--ease-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) var(--color-bg-base);
+}
+
+/* ========================================
+   SELECTION STYLES
+   ======================================== */
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-bg-base);
+}
+
+::-moz-selection {
+  background-color: var(--color-primary);
+  color: var(--color-bg-base);
+}
+
+/* ========================================
+   FOCUS STYLES (Accessibility)
+   ======================================== */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h2 {
+  font-size: var(--font-size-3xl);
+}
+
+h3 {
+  font-size: var(--font-size-2xl);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+}
+
+h5 {
+  font-size: var(--font-size-lg);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+p {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-secondary);
+}
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+code {
+  background-color: var(--color-bg-elevated);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+pre {
+  background-color: var(--color-bg-elevated);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  border: 1px solid var(--color-border-base);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+small {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+strong, b {
+  font-weight: var(--font-weight-semibold);
+}
+
+em, i {
+  font-style: italic;
+}
+
+/* ========================================
+   LINKS
+   ======================================== */
+
+a {
+  color: var(--color-primary);
+  transition: color var(--duration-fast) var(--ease-smooth);
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+a:active {
+  color: var(--color-primary-dark);
+}
+
+/* ========================================
+   LAYOUT UTILITIES
+   ======================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.container-fluid {
+  width: 100%;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+/* ========================================
+   GLOBAL TRANSITIONS
+   ======================================== */
+
+html[data-theme-transitioning] * {
+  transition: background-color var(--duration-slower) var(--ease-smooth),
+              color var(--duration-slower) var(--ease-smooth),
+              border-color var(--duration-slower) var(--ease-smooth),
+              box-shadow var(--duration-slower) var(--ease-smooth) !important;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
+.hidden { display: none !important; }
+.block { display: block !important; }
+.inline-block { display: inline-block !important; }
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+.cursor-pointer { cursor: pointer; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+.select-none { user-select: none; }
+.select-text { user-select: text; }

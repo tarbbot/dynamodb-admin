@@ -1,0 +1,121 @@
+/**
+ * Theme: Sunset Warm
+ * Description: Warm oranges and pinks like sunset
+ */
+
+[data-theme="sunset"] {
+  /* BASE COLORS */
+  --color-primary: #F97316;
+  --color-primary-light: #FB923C;
+  --color-primary-dark: #EA580C;
+
+  --color-secondary: #EC4899;
+  --color-secondary-light: #F472B6;
+  --color-secondary-dark: #DB2777;
+
+  --color-accent: #FBBF24;
+  --color-accent-light: #FCD34D;
+  --color-accent-dark: #F59E0B;
+
+  /* SEMANTIC COLORS */
+  --color-success: #10B981;
+  --color-success-light: #34D399;
+  --color-success-dark: #059669;
+
+  --color-warning: #F59E0B;
+  --color-warning-light: #FBBF24;
+  --color-warning-dark: #D97706;
+
+  --color-danger: #EF4444;
+  --color-danger-light: #F87171;
+  --color-danger-dark: #DC2626;
+
+  --color-info: #3B82F6;
+  --color-info-light: #60A5FA;
+  --color-info-dark: #2563EB;
+
+  /* BACKGROUND LAYERS */
+  --color-bg-base: #1C1917;
+  --color-bg-elevated: #292524;
+  --color-bg-overlay: #3F3832;
+  --color-bg-modal: #57534E;
+
+  --color-bg-elevated-rgb: 41, 37, 36;
+  --color-bg-overlay-rgb: 63, 56, 50;
+
+  /* TEXT COLORS */
+  --color-text-primary: #FAFAF9;
+  --color-text-secondary: #E7E5E4;
+  --color-text-tertiary: #D6D3D1;
+  --color-text-disabled: #A8A29E;
+
+  /* BORDERS */
+  --color-border-base: #44403C;
+  --color-border-strong: #57534E;
+  --color-border-light: #292524;
+
+  /* GRADIENTS */
+  --gradient-bg: linear-gradient(135deg, #1C1917 0%, #292524 50%, #3F3832 100%);
+  --gradient-primary: linear-gradient(135deg, #F97316 0%, #EC4899 100%);
+  --gradient-secondary: linear-gradient(135deg, #EC4899 0%, #FBBF24 100%);
+  --gradient-aurora: linear-gradient(135deg, #F97316 0%, #EC4899 50%, #FBBF24 100%);
+
+  /* SHADOWS & GLOWS */
+  --shadow-glow-primary: 0 0 20px rgba(249, 115, 22, 0.3);
+  --shadow-glow-secondary: 0 0 20px rgba(236, 72, 153, 0.3);
+  --shadow-glow-accent: 0 0 20px rgba(251, 191, 36, 0.3);
+
+  --shadow-glow-sm: 0 0 10px rgba(249, 115, 22, 0.2);
+  --shadow-glow-md: 0 0 20px rgba(249, 115, 22, 0.3);
+  --shadow-glow-lg: 0 0 30px rgba(249, 115, 22, 0.4);
+}
+
+[data-theme="sunset"] body {
+  background: var(--color-bg-base);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(251, 191, 36, 0.05) 0px, transparent 50%);
+}
+
+[data-theme="sunset"] .card-glass,
+[data-theme="sunset"] .breadcrumb {
+  background: rgba(41, 37, 36, 0.7);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(249, 115, 22, 0.1);
+}
+
+[data-theme="sunset"] .btn-primary {
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+}
+
+[data-theme="sunset"] .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
+}
+
+[data-theme="sunset"] .badge-primary {
+  background: rgba(249, 115, 22, 0.2);
+  border-color: rgba(249, 115, 22, 0.4);
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+}
+
+[data-theme="sunset"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #F97316 0%, #EC4899 100%);
+}
+
+[data-theme="sunset"] ::selection {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Warm glow on headings */
+[data-theme="sunset"] h1,
+[data-theme="sunset"] h2,
+[data-theme="sunset"] h3 {
+  background: linear-gradient(135deg, #F97316 0%, #EC4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

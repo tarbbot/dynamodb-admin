@@ -1,12 +1,122 @@
 <!DOCTYPE html>
-<html lang='en' data-theme="<%= theme %>">
+<html lang='en'>
 <head>
   <%- include('partials/head') %>
   <%- include('partials/ace-deps') %>
   <%- include('partials/bootstrap-deps') %>
   <%- include('partials/head-tail') %>
+
+  <style>
+    /* Item Editor Specific Styles */
+    body {
+      min-height: 100vh;
+      background: var(--color-bg-base);
+    }
+
+    .editor-container {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-top: var(--space-6);
+      height: calc(100vh - 250px);
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-md);
+      transition: all var(--duration-base) var(--ease-smooth);
+    }
+
+    .editor-container:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-lg), var(--shadow-glow-md);
+    }
+
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--color-border-base);
+    }
+
+    /* Match button size to Themes button */
+    .editor-toolbar .btn {
+      overflow: hidden !important;
+      white-space: nowrap;
+      padding: 0.5rem 1rem !important;
+      font-size: 0.875rem !important;
+      min-height: auto !important;
+      height: auto !important;
+      line-height: 1.2 !important;
+      border-radius: var(--radius-lg) !important;
+    }
+
+    .editor-toolbar .btn-lg,
+    .editor-toolbar .btn-ghost {
+      padding: 0.5rem 1rem !important;
+      font-size: 0.875rem !important;
+    }
+
+    .editor-toolbar .btn-icon {
+      gap: 0.5rem;
+    }
+
+    .editor-toolbar .btn svg {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border-base);
+    }
+
+    #documentTextarea {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .ace_editor {
+      font-family: var(--font-mono) !important;
+    }
+
+    /* Save/Delete Button States */
+    .btn-saving {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      width: auto !important;
+      height: auto !important;
+    }
+
+    @media (max-width: 768px) {
+      .editor-container {
+        height: calc(100vh - 300px);
+        min-height: 400px;
+      }
+
+      .editor-toolbar {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<body class='container-fluid d-flex flex-column'>
+
+<body class='container-fluid'>
   <header>
     <%
       const breadcrumb = [
@@ -22,117 +132,204 @@
       ]
 
       if (Item.id) {
-        breadcrumb.push({ text: Item.id })
+        breadcrumb.push({ text: Item.id, active: true })
       } else {
-        breadcrumb.push({ text: 'Item' })
+        breadcrumb.push({ text: 'New Item', active: true })
       }
     %>
     <%- include('partials/breadcrumb', { breadcrumb }) %>
     <%- include('partials/error-container') %>
   </header>
 
-  <main class='flex-fill d-flex flex-column'>
-    <nav>
-      <script>
-      function handleEditClick () {
-        const saveButton = document.getElementById('saveButton')
+  <main class="page-enter">
+    <div class="editor-container">
+      <div class="editor-toolbar">
+        <button
+          class='btn btn-primary btn-lg btn-icon'
+          id='saveButton'
+          onclick='handleSaveClick()'
+          type='button'
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M15 7l-6 6-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4 10v6a1 1 0 001 1h10a1 1 0 001-1v-6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <span>Save Item</span>
+        </button>
 
-        fetch(document.location.pathname, {
+        <% if (!isNew) { %>
+          <button
+            class='btn btn-danger btn-lg btn-icon'
+            onclick='handleDeleteClick(event)'
+            type='button'
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 5l10 10M15 5l-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Delete Item</span>
+          </button>
+        <% } %>
+
+        <div style="flex: 1;"></div>
+
+        <button
+          class='btn btn-ghost btn-icon'
+          onclick='formatJSON()'
+          type='button'
+          title='Format JSON (Ctrl+Shift+F)'
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 7h14M3 10h14M3 13h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Format</span>
+        </button>
+      </div>
+
+      <div class="editor-wrapper">
+        <div id='documentTextarea'><%= JSON.stringify(Item, null, 2) %></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Initialize Ace Editor
+    const editor = ace.edit("documentTextarea");
+    editor.resize();
+    editor.getSession().setMode("ace/mode/json");
+    editor.setTheme("ace/theme/monokai");
+    editor.setFontSize(14);
+    editor.focus();
+
+    // Format JSON
+    function formatJSON() {
+      try {
+        const json = JSON.parse(editor.getValue());
+        editor.setValue(JSON.stringify(json, null, 2));
+        editor.clearSelection();
+        editor.focus();
+        window.toast.success('JSON formatted successfully');
+      } catch (error) {
+        window.toast.error('Invalid JSON: ' + error.message);
+      }
+    }
+
+    // Keyboard shortcut for format
+    editor.commands.addCommand({
+      name: 'formatJSON',
+      bindKey: {win: 'Ctrl-Shift-F', mac: 'Command-Shift-F'},
+      exec: function(editor) {
+        formatJSON();
+      }
+    });
+
+    // Save Item Handler
+    async function handleSaveClick() {
+      const saveButton = document.getElementById('saveButton');
+      const originalHTML = saveButton.innerHTML;
+
+      // Validate JSON first
+      try {
+        JSON.parse(editor.getValue());
+      } catch (error) {
+        window.toast.error('Invalid JSON: ' + error.message);
+        return;
+      }
+
+      // Show loading state
+      saveButton.classList.add('btn-loading');
+      saveButton.disabled = true;
+
+      try {
+        const response = await fetch(document.location.pathname, {
           method: 'put',
           headers: {
             'Content-Type': 'application/json'
           },
           body: editor.getValue()
-        }).then(async (response) => {
-          if (response.ok) {
-            return response.json()
-          } else {
-            const responseText = await response.text()
-            throw new Error(JSON.parse(responseText).message)
-          }
-        }).then((json) => {
-          if (document.location.pathname.endsWith('/add-item')) {
-            const urlPart1 = document.location.pathname.replace('/add-item', '')
-            const param = encodeURIComponent(Object.values(json).join(','))
+        });
 
-            window.location = `${urlPart1}/items/${param}`
-            return
-          }
-          editor.setValue(JSON.stringify(json, null, 2));
-          editor.focus()
-          saveButton.classList.remove('btn-primary')
-          saveButton.classList.add('btn-success')
+        if (!response.ok) {
+          const responseText = await response.text();
+          throw new Error(JSON.parse(responseText).message);
+        }
+
+        const json = await response.json();
+
+        // Handle new item creation (redirect)
+        if (document.location.pathname.endsWith('/add-item')) {
+          const urlPart1 = document.location.pathname.replace('/add-item', '');
+          const param = encodeURIComponent(Object.values(json).join(','));
+
+          window.toast.success('Item created successfully!');
           setTimeout(() => {
-            saveButton.classList.add('btn-primary')
-            saveButton.classList.remove('btn-success')
-          }, 2000)
-        }).catch((error) => {
-          editor.focus()
-          saveButton.classList.remove('btn-primary')
-          saveButton.classList.add('btn-warning')
-          setTimeout(() => {
-            saveButton.classList.add('btn-primary')
-            saveButton.classList.remove('btn-warning')
-          }, 2000)
-          handleError(error.message)
-        })
+            window.location = `${urlPart1}/items/${param}`;
+          }, 500);
+          return;
+        }
+
+        // Update editor with response
+        editor.setValue(JSON.stringify(json, null, 2));
+        editor.clearSelection();
+        editor.focus();
+
+        // Show success toast
+        window.toast.success('Item saved successfully!');
+
+        // Reset button
+        saveButton.classList.remove('btn-loading');
+        saveButton.disabled = false;
+
+      } catch (error) {
+        saveButton.classList.remove('btn-loading');
+        saveButton.disabled = false;
+        editor.focus();
+        handleError(error.message);
       }
-      </script>
-      <button
-        class='btn btn-primary'
-        id='saveButton'
-        onclick='handleEditClick()'
-        type='button'
-      >
-        Save
-      </button>
+    }
 
-      <script>
-      function handleDeleteClick (event) {
-        event.preventDefault()
-        fetch(document.location.pathname, {
+    // Delete Item Handler
+    async function handleDeleteClick(event) {
+      event.preventDefault();
+
+      const confirmed = await window.modal.confirm({
+        title: 'Delete Item?',
+        message: 'Are you sure you want to permanently delete this item? This action cannot be undone.',
+        type: 'danger',
+        confirmText: 'Delete Item',
+        cancelText: 'Cancel'
+      });
+
+      if (!confirmed) return;
+
+      window.loading.show('Deleting item...');
+
+      try {
+        const response = await fetch(document.location.pathname, {
           method: 'delete'
-        }).then(async (response) => {
-          if (response.ok) {
-            window.location = `/tables/<%= encodeURIComponent(TableName) %>`
-          } else {
-            const responseText = await response.text()
-            throw new Error(JSON.parse(responseText).message)
-          }
-        }).catch((error) => {
-          handleError(error.message)
-        })
+        });
+
+        if (!response.ok) {
+          const responseText = await response.text();
+          throw new Error(JSON.parse(responseText).message);
+        }
+
+        window.loading.hide();
+        window.toast.success('Item deleted successfully');
+
+        setTimeout(() => {
+          window.location = `/tables/<%= encodeURIComponent(TableName) %>`;
+        }, 500);
+
+      } catch (error) {
+        window.loading.hide();
+        handleError(error.message);
       }
-      </script>
-      <% if (!isNew) { %>
-        <button
-          class='btn btn-danger'
-          onclick='handleDeleteClick(event)'
-          type='button'
-        >
-          Delete
-        </button>
-      <% } %>
-    </nav>
-    <article
-        id="documentWrapper"
-        class="flex-fill"
-        style='position: relative; margin-top: 16px; width: 100%; height: 100%'>
-      <div id='documentTextarea' style='
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;'><%= JSON.stringify(Item, null, 2) %></div>
-      <script>
-      const editor = ace.edit("documentTextarea")
-      editor.resize()
-      editor.getSession().setMode("ace/mode/json")
-      editor.setTheme("ace/theme/monokai")
-      editor.setFontSize(14)
-      editor.focus();
-      </script>
-    </article>
-  </main>
+    }
+
+    // Auto-resize editor on window resize
+    window.addEventListener('resize', () => {
+      editor.resize();
+    });
+  </script>
 </body>
 </html>

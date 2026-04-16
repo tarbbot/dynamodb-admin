@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang='en' data-theme="<%= theme %>">
+<html lang='en'>
 <head>
   <%- include('partials/head') %>
   <%- include('partials/bootstrap-deps') %>
@@ -14,24 +14,29 @@
       height: 100%;
       position: absolute;
       width: 100%;
+      pointer-events: none; /* Don't block clicks */
+      background: none !important; /* Remove any background */
+      z-index: 1; /* Low z-index, just above table */
     }
 
     .scroll-indicator::before {
-      background-image: linear-gradient(to right, rgba(146, 146, 146, 0.5), #fff);
+      background-image: linear-gradient(to right, var(--color-bg-base), transparent);
       content: '';
       height: 100%;
       left: 0;
       position: absolute;
       width: 5px;
+      pointer-events: none;
     }
 
     .scroll-indicator::after {
-      background-image: linear-gradient(to left, rgba(146, 146, 146, 0.5), #fff);
+      background-image: linear-gradient(to left, var(--color-bg-base), transparent);
       content: '';
       height: 100%;
       position: absolute;
       right: 0;
       width: 5px;
+      pointer-events: none;
     }
 
     .table-wrapper {
@@ -91,6 +96,319 @@
 
     .sort-indicator.active {
       opacity: 1;
+    }
+
+    /* ========================================
+       MODERN FUTURISTIC STYLES FOR SCAN PAGE
+       ======================================== */
+
+    /* Stats Cards */
+    #data-stats {
+      background: var(--color-bg-elevated) !important;
+      border: 1px solid var(--color-border-base) !important;
+      border-left: 4px solid var(--color-info) !important;
+      border-radius: var(--radius-lg) !important;
+      color: var(--color-text-primary) !important;
+      padding: var(--space-4) var(--space-5) !important;
+      display: flex !important;
+      align-items: center;
+      gap: var(--space-6);
+    }
+
+    #data-stats strong {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    #data-stats span {
+      color: var(--color-primary);
+      font-weight: var(--font-weight-bold);
+    }
+
+    /* Modern Tabs */
+    .nav-tabs {
+      border-bottom: 1px solid var(--color-border-base) !important;
+      margin-bottom: var(--space-6) !important;
+      background: var(--color-bg-elevated);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .nav-tabs .nav-item {
+      margin-bottom: 0;
+    }
+
+    .nav-tabs .nav-link {
+      border: none !important;
+      color: var(--color-text-tertiary) !important;
+      padding: var(--space-3) var(--space-5) !important;
+      border-radius: var(--radius-md);
+      transition: all var(--duration-fast) var(--ease-smooth);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .nav-tabs .nav-link:hover {
+      background: var(--color-bg-overlay) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    .nav-tabs .nav-link.active {
+      background: var(--color-primary) !important;
+      color: white !important;
+      box-shadow: var(--shadow-glow-sm);
+    }
+
+    /* Modern Form */
+    #form {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6) !important;
+      margin-bottom: var(--space-6);
+    }
+
+    #form .table {
+      background: transparent;
+      border-color: var(--color-border-base);
+    }
+
+    #form .table th {
+      background: var(--color-bg-overlay);
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-semibold);
+      border-color: var(--color-border-base);
+      padding: var(--space-4);
+    }
+
+    #form .table td {
+      background: var(--color-bg-base);
+      border-color: var(--color-border-base);
+      padding: var(--space-3);
+    }
+
+    #form .form-control {
+      background: var(--color-bg-elevated) !important;
+      border: 1px solid var(--color-border-base) !important;
+      border-radius: var(--radius-md) !important;
+      color: var(--color-text-primary) !important;
+      padding: var(--space-3) var(--space-4) !important;
+      min-height: 40px !important;
+      transition: border-color var(--duration-fast) var(--ease-smooth),
+                  box-shadow var(--duration-fast) var(--ease-smooth);
+      will-change: border-color;
+    }
+
+    #form .form-control:focus {
+      border-color: var(--color-primary) !important;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+      outline: none;
+    }
+
+    #form .form-control:hover {
+      border-color: var(--color-primary) !important;
+    }
+
+    #form .form-control option {
+      background: var(--color-bg-overlay);
+      color: var(--color-text-primary);
+    }
+
+    /* Filter Table Selects - MUST match input height exactly */
+    .filter-row-key,
+    .filter-row-value,
+    .filter-row-type,
+    .filter-row-operator {
+      height: 40px !important;
+      min-height: 40px !important;
+      max-height: 40px !important;
+      padding: var(--space-3) var(--space-4) !important;
+      background: var(--color-bg-elevated) !important;
+      border: 1px solid var(--color-border-base) !important;
+      border-radius: var(--radius-md) !important;
+      color: var(--color-text-primary) !important;
+      font-size: var(--font-size-base) !important;
+      line-height: normal !important;
+      box-sizing: border-box !important;
+      vertical-align: middle !important;
+      transition: border-color var(--duration-fast) var(--ease-smooth),
+                  box-shadow var(--duration-fast) var(--ease-smooth) !important;
+    }
+
+    /* Selects specific adjustments */
+    select.filter-row-type,
+    select.filter-row-operator {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* Filter Pills */
+    #filters-table .filter-remove {
+      font-size: var(--font-size-sm);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Modern Buttons */
+    .btn {
+      border-radius: var(--radius-md) !important;
+      font-weight: var(--font-weight-medium) !important;
+      transition: box-shadow var(--duration-fast) var(--ease-smooth),
+                  background-color var(--duration-fast) var(--ease-smooth),
+                  border-color var(--duration-fast) var(--ease-smooth),
+                  color var(--duration-fast) var(--ease-smooth) !important;
+      border-width: 1px !important;
+      will-change: box-shadow;
+    }
+
+    .btn-primary {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      box-shadow: var(--shadow-md), var(--shadow-glow-sm);
+    }
+
+    .btn-secondary {
+      background: var(--color-secondary) !important;
+      border-color: var(--color-secondary) !important;
+    }
+
+    .btn-danger {
+      background: var(--color-danger) !important;
+      border-color: var(--color-danger) !important;
+    }
+
+    .btn-warning {
+      background: var(--color-warning) !important;
+      border-color: var(--color-warning) !important;
+      color: white !important;
+    }
+
+    .btn-success {
+      background: var(--color-success) !important;
+      border-color: var(--color-success) !important;
+    }
+
+    .btn-info {
+      background: var(--color-info) !important;
+      border-color: var(--color-info) !important;
+    }
+
+    /* Modern Table */
+    .items-table {
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--color-border-base);
+    }
+
+    .items-table thead {
+      background: var(--color-bg-overlay);
+    }
+
+    .items-table thead th {
+      color: var(--color-text-primary);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-sm);
+      padding: var(--space-4);
+      border-color: var(--color-border-base);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .items-table tbody tr {
+      transition: background var(--duration-fast) var(--ease-smooth);
+      border-color: var(--color-border-base);
+    }
+
+    .items-table tbody tr:hover {
+      background: var(--color-bg-overlay);
+      box-shadow: inset 2px 0 0 var(--color-primary);
+    }
+
+    .items-table tbody td {
+      color: var(--color-text-secondary);
+      padding: var(--space-3);
+      border-color: var(--color-border-base);
+    }
+
+    .items-table td:first-child {
+      background-color: var(--color-bg-elevated) !important;
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .items-table tbody tr:hover td:first-child {
+      background-color: var(--color-bg-overlay) !important;
+    }
+
+    .sortable-header {
+      cursor: pointer;
+      user-select: none;
+      transition: background var(--duration-fast) var(--ease-smooth);
+    }
+
+    .sortable-header:hover {
+      background: var(--color-bg-elevated) !important;
+    }
+
+
+    /* Pagination */
+    .pagination {
+      margin-top: var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+
+    .pagination .page-link {
+      background: var(--color-bg-elevated) !important;
+      border: 1px solid var(--color-border-base) !important;
+      color: var(--color-text-primary) !important;
+      border-radius: var(--radius-md) !important;
+      margin: 0 var(--space-1);
+      padding: var(--space-2) var(--space-4);
+      transition: all var(--duration-fast) var(--ease-smooth);
+    }
+
+    .pagination .page-link:hover {
+      background: var(--color-bg-overlay) !important;
+      border-color: var(--color-primary) !important;
+      color: var(--color-primary) !important;
+    }
+
+    .pagination .page-item.active .page-link {
+      background: var(--color-primary) !important;
+      border-color: var(--color-primary) !important;
+      color: white !important;
+      box-shadow: var(--shadow-glow-sm);
+    }
+
+    .pagination .page-item.disabled .page-link {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Action Buttons in Table */
+    .items-table .btn-sm {
+      padding: var(--space-1) var(--space-2);
+      font-size: var(--font-size-xs);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Container Fluid Background */
+    .container-fluid {
+      background: var(--color-bg-base);
+      min-height: 100vh;
+    }
+
+    /* Page Enter Animation */
+    main {
+      animation: fadeInUp var(--duration-slow) var(--ease-smooth);
     }
   </style>
   <%- include('partials/head-tail') %>
@@ -240,8 +558,14 @@
           </button>
         </div>
 
-        <div class="col-md-6 pagination-container d-none">
-            <nav style="float: right">
+        <div class="col-md-6 pagination-container d-none" style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem;">
+           <select name="pageSize" class="form-control" style="width: auto; min-width: 80px;">
+             <% for (const [i, size] of [25, 100, 250, 500, 1000, 3000, 10000].entries()) { %>
+               <option value="<%= size %>"<% if (Number.parseInt(query.pageSize) === size || (!query.pageSize && i === 0)) { %> selected<% } %>><%= size %></option>
+             <% } %>
+           </select>
+
+            <nav>
               <ul class="pagination" style="margin: 0">
                 <li class="page-item page-item-previous disabled">
                   <a class="page-link page-link-previous" href="#">Previous Page</a>
@@ -254,13 +578,6 @@
                  </li>
               </ul>
            </nav>
-           <div style="float: right; margin-right: 1em">
-             <select name="pageSize" class="form-control">
-               <% for (const [i, size] of [25, 100, 250, 500, 1000, 3000, 10000].entries()) { %>
-                 <option value="<%= size %>"<% if (Number.parseInt(query.pageSize) === size || (!query.pageSize && i === 0)) { %> selected<% } %>><%= size %></option>
-               <% } %>
-             </select>
-           </div>
         </div>
       </div>
     </form>
@@ -592,10 +909,13 @@
     }
 
     function renderItems(data) {
+      console.log('[Scan] renderItems called with data:', data);
+
       // Store data for sorting
       currentData = data
 
       // Render sortable column headers
+      console.log('[Scan] Rendering column headers for keys:', data.uniqueKeys);
       $('#actions-row').append(data.uniqueKeys.map(key => {
         const th = $('<th scope="col" class="sortable-header"></th>')
         th.text(key)
@@ -631,8 +951,10 @@
         const rangeTo = rangeFrom + (data.Items.length - 1)
         $('.item-count').append(' (showing ' + rangeFrom + ' - ' + rangeTo + ')')
 
+        console.log('[Scan] Showing table container');
         $('.table-container').removeClass('d-none')
         $('.pagination-container').removeClass('d-none')
+        console.log('[Scan] Table container classes after remove:', $('.table-container').attr('class'));
       } else {
         $('.no-results').removeClass('d-none')
       }
@@ -680,8 +1002,12 @@
         }
       }
 
+      console.log('[Scan] Fetching items from:', document.location.pathname + '/items' + document.location.search);
+
       fetch(document.location.pathname + '/items' + document.location.search)
         .then(async (response) => {
+          console.log('[Scan] Fetch response:', response.status, response.ok);
+
           if (response.ok) {
             return response.json()
           }
@@ -690,9 +1016,14 @@
           throw new Error(JSON.parse(responseText).message)
         })
         .then(json => {
+          console.log('[Scan] Received data:', json);
+          console.log('[Scan] Items count:', json?.Items?.length);
+          console.log('[Scan] Unique keys:', json?.uniqueKeys);
+
           renderItems(json)
         })
         .catch(error => {
+          console.error('[Scan] Error loading items:', error);
           handleError(error.message)
         })
     })
