@@ -98,6 +98,35 @@
       opacity: 1;
     }
 
+    /* Sort preference pin icon */
+    .sort-preference-pin {
+      display: inline-block;
+      margin-right: 6px;
+      font-size: 0.85em;
+      opacity: 0.2;
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-smooth);
+      padding: 2px 4px;
+      border-radius: var(--radius-sm);
+      vertical-align: middle;
+    }
+
+    .sort-preference-pin:hover {
+      opacity: 0.6;
+      background: var(--color-bg-elevated);
+      transform: scale(1.15);
+    }
+
+    .sort-preference-pin.is-default {
+      opacity: 1;
+      color: var(--color-warning);
+      text-shadow: 0 0 8px currentColor;
+    }
+
+    .sortable-header {
+      padding-right: 35px !important; /* Space for sort indicator */
+    }
+
     /* ========================================
        MODERN FUTURISTIC STYLES FOR SCAN PAGE
        ======================================== */
@@ -1202,6 +1231,96 @@
       direction: 'asc' // 'asc' or 'desc'
     }
 
+    // Sort Preference Manager
+    const SortPreferenceManager = {
+      tableName: '<%= Table.TableName %>',
+      storageKey: 'sort-preference-<%= Table.TableName %>',
+
+      // Save sort preference for this table
+      savePreference(column, direction) {
+        const preference = { column, direction }
+        localStorage.setItem(this.storageKey, JSON.stringify(preference))
+        console.log('[SortPreference] Saved:', preference)
+
+        // Show toast notification
+        if (window.toast) {
+          window.toast.success(`Default sort set: ${column} (${direction})`)
+        }
+      },
+
+      // Get saved preference
+      getPreference() {
+        try {
+          const saved = localStorage.getItem(this.storageKey)
+          if (saved) {
+            const preference = JSON.parse(saved)
+            console.log('[SortPreference] Loaded:', preference)
+            return preference
+          }
+        } catch (e) {
+          console.error('[SortPreference] Error loading preference:', e)
+        }
+        return null
+      },
+
+      // Clear preference
+      clearPreference() {
+        localStorage.removeItem(this.storageKey)
+        console.log('[SortPreference] Cleared')
+
+        if (window.toast) {
+          window.toast.info('Default sort cleared')
+        }
+      },
+
+      // Update UI to show which column is default
+      updateUI() {
+        const preference = this.getPreference()
+
+        // Remove all "is-default" classes
+        $('.sort-preference-pin').removeClass('is-default')
+
+        if (preference && currentData) {
+          // Find the header for the preferred column
+          const headerIndex = currentData.uniqueKeys.indexOf(preference.column)
+          if (headerIndex >= 0) {
+            const pin = $(`#actions-row th:eq(${headerIndex + 1}) .sort-preference-pin`)
+            pin.addClass('is-default')
+          }
+        }
+      },
+
+      // Apply saved preference automatically
+      applyPreference() {
+        const preference = this.getPreference()
+        if (preference && currentData) {
+          // Check if preferred column exists in current data
+          const columnExists = currentData.uniqueKeys.includes(preference.column)
+
+          if (columnExists) {
+            console.log('[SortPreference] Applying saved preference:', preference)
+
+            // Update sort state
+            sortState.column = preference.column
+            sortState.direction = preference.direction
+
+            // Sort items
+            const sortedItems = sortItems(currentData.Items, preference.column, preference.direction)
+
+            // Re-render table
+            $('#items-container').empty()
+            renderTableRows(sortedItems, currentData.uniqueKeys)
+
+            // Update indicators
+            updateSortIndicators()
+            this.updateUI()
+          } else {
+            console.log('[SortPreference] Saved column not in current data, skipping:', preference.column)
+          }
+        }
+      }
+    }
+
     const form = document.querySelector('#form')
 
     function buildFilters() {
@@ -1631,6 +1750,12 @@
 
       // Update sort indicators
       updateSortIndicators()
+
+      // If this column is the default preference, update the saved direction
+      const preference = SortPreferenceManager.getPreference()
+      if (preference && preference.column === column) {
+        SortPreferenceManager.savePreference(column, sortState.direction)
+      }
     }
 
     function renderTableRows(items, uniqueKeys) {
@@ -1677,30 +1802,96 @@
     function renderItems(data, isInitialLoad = true) {
       console.log('[Scan] renderItems called with data:', data);
 
+      // Check if columns changed (compare with current headers)
+      const currentColumns = Array.from($('#actions-row th.sortable-header')).map(th => $(th).find('span:first').text())
+      const columnsChanged = isInitialLoad ||
+                            currentColumns.length !== data.uniqueKeys.length ||
+                            !currentColumns.every((col, i) => col === data.uniqueKeys[i])
+
+      console.log('[Scan] Columns changed?', columnsChanged, 'Current:', currentColumns, 'New:', data.uniqueKeys);
+
       // Store data for sorting
       currentData = data
 
-      // Render sortable column headers (only on initial load)
-      if (isInitialLoad) {
+      // Render sortable column headers (on initial load OR when columns change)
+      if (columnsChanged) {
+        // Clear existing headers (except Actions column)
+        $('#actions-row th.sortable-header').remove()
+
+        console.log('[Scan] Rendering column headers for keys:', data.uniqueKeys);
         console.log('[Scan] Rendering column headers for keys:', data.uniqueKeys);
         $('#actions-row').append(data.uniqueKeys.map(key => {
           const th = $('<th scope="col" class="sortable-header"></th>')
-          th.text(key)
+
+          // Sort preference pin (star) - FIRST
+          const pin = $('<span class="sort-preference-pin" title="Set as default sort">📌</span>')
+          pin.on('click', (e) => {
+            e.stopPropagation() // Don't trigger column sort
+
+            const preference = SortPreferenceManager.getPreference()
+
+            // If already default, clear it; otherwise set it
+            if (preference && preference.column === key) {
+              SortPreferenceManager.clearPreference()
+            } else {
+              // Save current sort state for this column
+              const direction = (sortState.column === key) ? sortState.direction : 'asc'
+              SortPreferenceManager.savePreference(key, direction)
+            }
+
+            SortPreferenceManager.updateUI()
+          })
+          th.append(pin)
+
+          // Column name - SECOND
+          const columnName = $('<span></span>').text(key)
+          th.append(columnName)
+
+          // Sort indicator (arrow) - LAST (positioned absolutely on the right)
           th.append('<span class="sort-indicator">⇅</span>')
+
+          // Click on header to sort
           th.on('click', () => handleColumnSort(key))
+
           return th
         }))
 
-        // Initialize column manager with available columns
-        window.columnManager.init()
+        // Initialize/update column manager with available columns
+        if (isInitialLoad) {
+          window.columnManager.init()
+        }
         window.columnManager.populateColumnList(data.uniqueKeys)
+
+        // Update sort preference UI (mark default column)
+        SortPreferenceManager.updateUI()
       }
 
       if (data.Items.length) {
         // Clear previous rows (for pagination updates)
         $('#items-container').empty()
 
-        renderTableRows(data.Items, data.uniqueKeys)
+        // Check if we should apply sort preference
+        const preference = SortPreferenceManager.getPreference()
+        let itemsToRender = data.Items
+
+        if (preference && data.uniqueKeys.includes(preference.column)) {
+          console.log('[SortPreference] Applying saved preference:', preference)
+
+          // Update sort state
+          sortState.column = preference.column
+          sortState.direction = preference.direction
+
+          // Sort items before rendering
+          itemsToRender = sortItems(data.Items, preference.column, preference.direction)
+        }
+
+        // Render rows (already sorted if preference was applied)
+        renderTableRows(itemsToRender, data.uniqueKeys)
+
+        // Update sort indicators to show current sort
+        if (sortState.column) {
+          updateSortIndicators()
+        }
 
         // Setup page size change handler (only on initial load)
         if (isInitialLoad) {
