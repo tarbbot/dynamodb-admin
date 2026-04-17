@@ -1225,8 +1225,20 @@
       return filters
     }
 
-    form.addEventListener('submit', () => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault() // Prevent full page reload
+
+      // Build filters and set hidden field
       form.filters.value = JSON.stringify(buildFilters())
+
+      // Serialize form data to query string
+      const formData = new FormData(form)
+      const queryString = '?' + new URLSearchParams(formData).toString()
+
+      console.log('[Scan] Form submitted via AJAX:', queryString)
+
+      // Load data via AJAX instead of full page reload
+      loadPage(queryString)
     })
 
     document.querySelector('select[name="queryableSelection"]').addEventListener('change', (event) => {
@@ -1731,9 +1743,12 @@
         console.log('[Scan] Showing table container');
         $('.table-container').removeClass('d-none')
         $('#stats-pagination-bar').removeClass('d-none')
+        $('.no-results').addClass('d-none') // Hide "No results" message
         console.log('[Scan] Table container classes after remove:', $('.table-container').attr('class'));
       } else {
-        $('.no-results').removeClass('d-none')
+        $('.no-results').removeClass('d-none') // Show "No results" message
+        $('.table-container').addClass('d-none') // Hide table
+        $('#stats-pagination-bar').addClass('d-none') // Hide stats
       }
 
       $('#table-placeholder').addClass('d-none')
