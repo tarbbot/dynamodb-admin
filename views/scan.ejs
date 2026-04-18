@@ -965,6 +965,277 @@
     main {
       animation: fadeInUp var(--duration-slow) var(--ease-smooth);
     }
+
+    /* ========================================
+       DEBUG CONSOLE
+       ======================================== */
+
+    .debug-console {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-bg-elevated);
+      border-top: 2px solid var(--color-primary);
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      transition: all var(--duration-base) var(--ease-smooth);
+      max-height: 70vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .debug-console.collapsed {
+      max-height: 48px;
+    }
+
+    .debug-console.collapsed .debug-console-body {
+      display: none;
+    }
+
+    .debug-console-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-bg-overlay);
+      border-bottom: 1px solid var(--color-border-base);
+      cursor: pointer;
+    }
+
+    .debug-console-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-primary);
+    }
+
+    .debug-console-badge {
+      font-size: var(--font-size-xs);
+      padding: 2px 8px;
+      background: var(--color-primary);
+      color: #000;
+      border-radius: var(--radius-full);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .debug-console-toggle {
+      background: transparent;
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      padding: var(--space-2);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-fast);
+    }
+
+    .debug-console-toggle:hover {
+      background: var(--color-bg-elevated);
+      color: var(--color-primary);
+    }
+
+    .debug-console.collapsed .debug-console-expand-icon {
+      transform: rotate(180deg);
+    }
+
+    .debug-console-body {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .debug-console-tabs {
+      display: flex;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-bg-base);
+      border-bottom: 1px solid var(--color-border-base);
+      overflow-x: auto;
+    }
+
+    .debug-tab {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: transparent;
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-lg);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: all var(--duration-fast);
+      white-space: nowrap;
+    }
+
+    .debug-tab:hover {
+      background: var(--color-bg-elevated);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .debug-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #000;
+    }
+
+    .debug-console-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-5);
+    }
+
+    .debug-tab-content {
+      display: none;
+    }
+
+    .debug-tab-content.active {
+      display: block;
+    }
+
+    .debug-tool-section h4 {
+      margin: 0 0 var(--space-2);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-lg);
+    }
+
+    .debug-help-text {
+      margin: 0 0 var(--space-5);
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-sm);
+    }
+
+    .debug-form-group {
+      margin-bottom: var(--space-4);
+    }
+
+    .debug-form-group label {
+      display: block;
+      margin-bottom: var(--space-2);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .debug-form-group small {
+      display: block;
+      margin-top: var(--space-2);
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-xs);
+    }
+
+    .debug-input,
+    .debug-select,
+    .debug-textarea {
+      width: 100%;
+      padding: var(--space-3);
+      background: var(--color-bg-base);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-lg);
+      color: var(--color-text-primary);
+      font-family: 'Courier New', monospace;
+      font-size: var(--font-size-sm);
+    }
+
+    .debug-input:focus,
+    .debug-select:focus,
+    .debug-textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .debug-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .debug-form-actions {
+      display: flex;
+      gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+
+    .debug-results {
+      margin-top: var(--space-5);
+      padding: var(--space-4);
+      background: var(--color-bg-base);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-lg);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .debug-result-item {
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--color-border-light);
+      font-family: 'Courier New', monospace;
+      font-size: var(--font-size-sm);
+    }
+
+    .debug-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .debug-agg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .debug-agg-card {
+      padding: var(--space-4);
+      background: var(--color-bg-base);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+
+    .debug-agg-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-2);
+    }
+
+    .debug-agg-value {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary);
+      font-family: 'Courier New', monospace;
+    }
+
+    .debug-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-3);
+      margin-bottom: var(--space-5);
+    }
+
+    .debug-stat-card {
+      padding: var(--space-3);
+      background: var(--color-bg-base);
+      border: 1px solid var(--color-border-base);
+      border-radius: var(--radius-md);
+    }
+
+    .debug-stat-label {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--space-1);
+    }
+
+    .debug-stat-value {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
   </style>
   <%- include('partials/head-tail') %>
 </head>
@@ -1997,6 +2268,11 @@
       }
 
       updateFilterAutocomplete(data.uniqueKeys)
+
+      // Update debug console items count
+      if (window.DebugConsole) {
+        DebugConsole.updateItemsCount()
+      }
     }
 
     window.addEventListener('load', () => {
@@ -2441,6 +2717,374 @@
 
     // Initialize column manager when table is loaded
     window.columnManager = ColumnManager
+
+    // ==========================================
+    // DEBUG CONSOLE
+    // ==========================================
+
+    const DebugConsole = {
+      isExpanded: false,
+
+      toggle() {
+        this.isExpanded = !this.isExpanded
+        const console = document.getElementById('debug-console')
+        console.classList.toggle('collapsed', !this.isExpanded)
+      },
+
+      switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.debug-tab').forEach(tab => {
+          tab.classList.toggle('active', tab.dataset.tab === tabName)
+        })
+
+        // Update tab content
+        document.querySelectorAll('.debug-tab-content').forEach(content => {
+          content.classList.toggle('active', content.id === `tab-${tabName}`)
+        })
+
+        // Load specific tab data
+        if (tabName === 'inspector') {
+          this.loadInspector()
+        } else if (tabName === 'dates') {
+          this.loadDateColumns()
+        }
+      },
+
+      updateItemsCount() {
+        const count = currentData?.Items?.length || 0
+        document.getElementById('debug-items-count').textContent = `${count} items`
+
+        // Update available columns in formula tab
+        if (currentData?.Items?.length > 0) {
+          const columns = Object.keys(currentData.Items[0]).filter(k => !k.startsWith('__'))
+          const columnsDiv = document.getElementById('formula-available-columns')
+          if (columnsDiv) {
+            columnsDiv.innerHTML = `<strong>Available columns:</strong> ${columns.join(', ')}`
+          }
+        }
+      },
+
+      // FORMULA BUILDER
+      executeFormula() {
+        const name = document.getElementById('formula-name').value || 'Result'
+        const expression = document.getElementById('formula-expression').value
+
+        if (!expression.trim()) {
+          window.toast.error('Please enter a formula')
+          return
+        }
+
+        if (!currentData || !currentData.Items.length) {
+          window.toast.error('No data loaded')
+          return
+        }
+
+        const results = []
+        let errors = 0
+
+        try {
+          currentData.Items.forEach((item, index) => {
+            try {
+              // DEBUG: Log first item structure
+              if (index === 0) {
+                console.log('=== FORMULA DEBUG ===')
+                console.log('First item structure:', item)
+                console.log('Item keys:', Object.keys(item))
+                console.log('Expression:', expression)
+              }
+
+              // Create context with all column values as variables
+              const context = { ...item, Math, parseFloat, parseInt }
+
+              // Evaluate expression
+              const func = new Function(...Object.keys(context), `return ${expression}`)
+              const result = func(...Object.values(context))
+
+              results.push({
+                index,
+                value: result,
+                item
+              })
+            } catch (e) {
+              errors++
+              results.push({
+                index,
+                value: 'ERROR',
+                error: e.message,
+                item
+              })
+            }
+          })
+
+          // Display results
+          const resultsDiv = document.getElementById('formula-results')
+          let html = `<h5 style="margin-bottom: var(--space-3); color: var(--color-text-primary);">${name} Results</h5>`
+
+          if (errors > 0) {
+            html += `<div style="color: var(--color-danger); margin-bottom: var(--space-3);">⚠️ ${errors} errors</div>`
+          }
+
+          html += '<div style="max-height: 250px; overflow-y: auto;">'
+          results.forEach(r => {
+            if (r.error) {
+              const availableKeys = Object.keys(r.item).filter(k => !k.startsWith('__')).join(', ')
+              html += `<div class="debug-result-item" style="color: var(--color-danger);">Row ${r.index + 1}: ERROR - ${r.error}<br><small style="opacity: 0.7; font-size: 0.75rem;">Available columns: ${availableKeys}</small></div>`
+            } else {
+              html += `<div class="debug-result-item">Row ${r.index + 1}: <strong>${typeof r.value === 'number' ? r.value.toFixed(4) : r.value}</strong></div>`
+            }
+          })
+          html += '</div>'
+
+          resultsDiv.innerHTML = html
+          resultsDiv.style.display = 'block'
+
+          window.toast.success(`Formula executed on ${results.length} items`)
+        } catch (e) {
+          window.toast.error('Formula error: ' + e.message)
+        }
+      },
+
+      clearFormula() {
+        document.getElementById('formula-name').value = ''
+        document.getElementById('formula-expression').value = ''
+        document.getElementById('formula-results').innerHTML = ''
+      },
+
+      // AGGREGATIONS
+      calculateAggregations() {
+        const expression = document.getElementById('agg-expression').value
+        const filter = document.getElementById('agg-filter').value
+
+        if (!expression.trim()) {
+          window.toast.error('Please enter a column or expression')
+          return
+        }
+
+        if (!currentData || !currentData.Items.length) {
+          window.toast.error('No data loaded')
+          return
+        }
+
+        try {
+          // Filter items if filter expression provided
+          let items = currentData.Items
+
+          if (filter.trim()) {
+            items = items.filter(item => {
+              try {
+                const context = { ...item }
+                const func = new Function(...Object.keys(context), `return ${filter}`)
+                return func(...Object.values(context))
+              } catch {
+                return false
+              }
+            })
+          }
+
+          // Calculate values
+          const values = []
+          items.forEach(item => {
+            try {
+              const context = { ...item, Math, parseFloat, parseInt }
+              const func = new Function(...Object.keys(context), `return ${expression}`)
+              const value = func(...Object.values(context))
+              if (typeof value === 'number' && !isNaN(value)) {
+                values.push(value)
+              }
+            } catch (e) {
+              // Skip errors
+            }
+          })
+
+          if (values.length === 0) {
+            window.toast.error('No valid numeric values found')
+            return
+          }
+
+          // Calculate aggregations
+          const sum = values.reduce((a, b) => a + b, 0)
+          const avg = sum / values.length
+          const min = Math.min(...values)
+          const max = Math.max(...values)
+          const count = values.length
+
+          // Display results
+          const resultsDiv = document.getElementById('agg-results')
+          resultsDiv.innerHTML = `
+            <div class="debug-agg-card">
+              <div class="debug-agg-label">Sum</div>
+              <div class="debug-agg-value">${sum.toLocaleString(undefined, { maximumFractionDigits: 4 })}</div>
+            </div>
+            <div class="debug-agg-card">
+              <div class="debug-agg-label">Average</div>
+              <div class="debug-agg-value">${avg.toLocaleString(undefined, { maximumFractionDigits: 4 })}</div>
+            </div>
+            <div class="debug-agg-card">
+              <div class="debug-agg-label">Min</div>
+              <div class="debug-agg-value">${min.toLocaleString(undefined, { maximumFractionDigits: 4 })}</div>
+            </div>
+            <div class="debug-agg-card">
+              <div class="debug-agg-label">Max</div>
+              <div class="debug-agg-value">${max.toLocaleString(undefined, { maximumFractionDigits: 4 })}</div>
+            </div>
+            <div class="debug-agg-card">
+              <div class="debug-agg-label">Count</div>
+              <div class="debug-agg-value">${count}</div>
+            </div>
+          `
+
+          window.toast.success(`Aggregations calculated (${count} values)`)
+        } catch (e) {
+          window.toast.error('Aggregation error: ' + e.message)
+        }
+      },
+
+      // DATE FORMATTER
+      loadDateColumns() {
+        const select = document.getElementById('date-column')
+        select.innerHTML = '<option value="">Select column...</option>'
+
+        if (currentData && currentData.uniqueKeys) {
+          currentData.uniqueKeys.forEach(key => {
+            select.innerHTML += `<option value="${key}">${key}</option>`
+          })
+        }
+      },
+
+      previewDates() {
+        const column = document.getElementById('date-column').value
+        const format = document.getElementById('date-format').value
+
+        if (!column) {
+          window.toast.error('Please select a date column')
+          return
+        }
+
+        if (!currentData || !currentData.Items.length) {
+          window.toast.error('No data loaded')
+          return
+        }
+
+        try {
+          const resultsDiv = document.getElementById('date-results')
+          let html = '<div style="max-height: 250px; overflow-y: auto;">'
+
+          currentData.Items.slice(0, 10).forEach((item, index) => {
+            const value = item[column]
+            let formatted = 'N/A'
+
+            if (value) {
+              const date = new Date(value)
+              if (!isNaN(date.getTime())) {
+                switch (format) {
+                  case 'iso':
+                    formatted = date.toISOString()
+                    break
+                  case 'us':
+                    formatted = date.toLocaleDateString('en-US')
+                    break
+                  case 'eu':
+                    formatted = date.toLocaleDateString('en-GB')
+                    break
+                  case 'long':
+                    formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                    break
+                  case 'time':
+                    formatted = date.toLocaleTimeString()
+                    break
+                  case 'relative':
+                    const diff = Date.now() - date.getTime()
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+                    formatted = days === 0 ? 'Today' : `${days} day${days !== 1 ? 's' : ''} ago`
+                    break
+                  case 'unix':
+                    formatted = Math.floor(date.getTime() / 1000).toString()
+                    break
+                }
+              }
+            }
+
+            html += `<div class="debug-result-item">Row ${index + 1}: <strong>${formatted}</strong> (${value})</div>`
+          })
+
+          html += '</div>'
+          html += '<div style="margin-top: var(--space-3); color: var(--color-text-tertiary); font-size: var(--font-size-xs);">Showing first 10 rows</div>'
+
+          resultsDiv.innerHTML = html
+          resultsDiv.style.display = 'block'
+        } catch (e) {
+          window.toast.error('Date formatting error: ' + e.message)
+        }
+      },
+
+      // DATA INSPECTOR
+      loadInspector() {
+        if (!currentData || !currentData.Items.length) {
+          document.getElementById('inspector-stats').innerHTML = '<p style="color: var(--color-text-tertiary);">No data loaded</p>'
+          return
+        }
+
+        const items = currentData.Items
+        const columns = currentData.uniqueKeys
+
+        // Calculate stats
+        let html = ''
+
+        // Total items
+        html += `
+          <div class="debug-stat-card">
+            <div class="debug-stat-label">Total Items</div>
+            <div class="debug-stat-value">${items.length}</div>
+          </div>
+        `
+
+        // Total columns
+        html += `
+          <div class="debug-stat-card">
+            <div class="debug-stat-label">Columns</div>
+            <div class="debug-stat-value">${columns.length}</div>
+          </div>
+        `
+
+        // Detect numeric columns
+        const numericColumns = columns.filter(col => {
+          const values = items.map(item => item[col])
+          return values.some(v => typeof v === 'number')
+        })
+
+        html += `
+          <div class="debug-stat-card">
+            <div class="debug-stat-label">Numeric Columns</div>
+            <div class="debug-stat-value">${numericColumns.length}</div>
+          </div>
+        `
+
+        document.getElementById('inspector-stats').innerHTML = html
+
+        // Sample data
+        const sampleDiv = document.getElementById('inspector-sample')
+        let sampleHtml = '<h5 style="margin: var(--space-5) 0 var(--space-3); color: var(--color-text-primary);">Sample Data (First 3 items)</h5>'
+        sampleHtml += '<div class="debug-results"><pre style="margin: 0; color: var(--color-text-secondary);">'
+        sampleHtml += JSON.stringify(items.slice(0, 3), null, 2)
+        sampleHtml += '</pre></div>'
+
+        sampleDiv.innerHTML = sampleHtml
+      }
+    }
+
+    // Initialize debug console
+    window.addEventListener('DOMContentLoaded', () => {
+      DebugConsole.updateItemsCount()
+    })
+
+    // Update count when data changes
+    window.addEventListener('load', () => {
+      if (currentData) {
+        DebugConsole.updateItemsCount()
+      }
+    })
+
+    window.DebugConsole = DebugConsole
     </script>
 
     <div id="table-placeholder" class="text-center">Loading data...</div>
@@ -2459,6 +3103,156 @@
           <tbody id="items-container">
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Debug Console Panel -->
+    <div id="debug-console" class="debug-console collapsed">
+      <div class="debug-console-header">
+        <div class="debug-console-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+          <span>Debug Console</span>
+          <span class="debug-console-badge" id="debug-items-count">0 items</span>
+        </div>
+        <button class="debug-console-toggle" onclick="DebugConsole.toggle()">
+          <svg class="debug-console-expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <div class="debug-console-body">
+        <div class="debug-console-tabs">
+          <button class="debug-tab active" data-tab="formulas" onclick="DebugConsole.switchTab('formulas')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7h16M4 12h16M4 17h16"/>
+            </svg>
+            Formulas
+          </button>
+          <button class="debug-tab" data-tab="aggregations" onclick="DebugConsole.switchTab('aggregations')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+            Aggregations
+          </button>
+          <button class="debug-tab" data-tab="dates" onclick="DebugConsole.switchTab('dates')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Dates
+          </button>
+          <button class="debug-tab" data-tab="inspector" onclick="DebugConsole.switchTab('inspector')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Inspector
+          </button>
+        </div>
+
+        <div class="debug-console-content">
+          <!-- Formula Builder Tab -->
+          <div class="debug-tab-content active" id="tab-formulas">
+            <div class="debug-tool-section">
+              <h4>Formula Builder</h4>
+              <p class="debug-help-text">Create custom formulas with conditions and calculations</p>
+
+              <div class="debug-form-group">
+                <label>Formula Name</label>
+                <input type="text" id="formula-name" placeholder="e.g., Signed Amount" class="debug-input">
+              </div>
+
+              <div class="debug-form-group">
+                <label>Formula Expression</label>
+                <textarea id="formula-expression" class="debug-textarea" placeholder="Example: (SIDE === 'buy' ? -1 : 1) * AMOUNT * PRICE" rows="3"></textarea>
+                <small>Available: Column names (e.g., AMOUNT, PRICE), operators (+, -, *, /), ternary (? :), Math functions</small>
+                <div id="formula-available-columns" style="margin-top: var(--space-2); padding: var(--space-2); background: var(--color-bg-secondary); border-radius: 4px; font-size: 0.8rem;"></div>
+              </div>
+
+              <div class="debug-form-actions">
+                <button class="btn btn-primary btn-sm" onclick="DebugConsole.executeFormula()">Calculate</button>
+                <button class="btn btn-ghost btn-sm" onclick="DebugConsole.clearFormula()">Clear</button>
+              </div>
+
+              <div id="formula-results" class="debug-results"></div>
+            </div>
+          </div>
+
+          <!-- Aggregations Tab -->
+          <div class="debug-tab-content" id="tab-aggregations">
+            <div class="debug-tool-section">
+              <h4>Aggregations</h4>
+              <p class="debug-help-text">Calculate sum, average, min, max, count on columns or formulas</p>
+
+              <div class="debug-form-group">
+                <label>Column / Expression</label>
+                <input type="text" id="agg-expression" placeholder="e.g., AMOUNT or AMOUNT * PRICE" class="debug-input">
+              </div>
+
+              <div class="debug-form-group">
+                <label>Filter (optional)</label>
+                <input type="text" id="agg-filter" placeholder="e.g., SIDE === 'buy'" class="debug-input">
+              </div>
+
+              <div class="debug-form-actions">
+                <button class="btn btn-primary btn-sm" onclick="DebugConsole.calculateAggregations()">Calculate All</button>
+              </div>
+
+              <div id="agg-results" class="debug-agg-grid"></div>
+            </div>
+          </div>
+
+          <!-- Date Formatter Tab -->
+          <div class="debug-tab-content" id="tab-dates">
+            <div class="debug-tool-section">
+              <h4>Date Formatter</h4>
+              <p class="debug-help-text">Format date columns to different formats</p>
+
+              <div class="debug-form-group">
+                <label>Date Column</label>
+                <select id="date-column" class="debug-select">
+                  <option value="">Select column...</option>
+                </select>
+              </div>
+
+              <div class="debug-form-group">
+                <label>Output Format</label>
+                <select id="date-format" class="debug-select">
+                  <option value="iso">ISO 8601 (2024-01-15T10:30:00Z)</option>
+                  <option value="us">US (01/15/2024)</option>
+                  <option value="eu">EU (15/01/2024)</option>
+                  <option value="long">Long (January 15, 2024)</option>
+                  <option value="time">Time (10:30:00)</option>
+                  <option value="relative">Relative (2 days ago)</option>
+                  <option value="unix">Unix Timestamp</option>
+                </select>
+              </div>
+
+              <div class="debug-form-actions">
+                <button class="btn btn-primary btn-sm" onclick="DebugConsole.previewDates()">Preview</button>
+              </div>
+
+              <div id="date-results" class="debug-results"></div>
+            </div>
+          </div>
+
+          <!-- Data Inspector Tab -->
+          <div class="debug-tab-content" id="tab-inspector">
+            <div class="debug-tool-section">
+              <h4>Data Inspector</h4>
+              <p class="debug-help-text">Explore and analyze your data</p>
+
+              <div id="inspector-stats" class="debug-stats-grid"></div>
+              <div id="inspector-sample" class="debug-sample"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
